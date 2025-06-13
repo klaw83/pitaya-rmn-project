@@ -11,6 +11,7 @@ LDLIBS += -lrp-hw -lm -lstdc++ -lpthread -li2c -lsocketcan
 # List of compiled object files (not yet linked to executable)
 
 PRGS =  Burst
+		sin
 
 OBJS := $(patsubst %,%.o,$(PRGS))
 SRC := $(patsubst %,%.c,$(PRGS))
