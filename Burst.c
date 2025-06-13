@@ -36,9 +36,9 @@ int main(int argc, char **argv){
 
     rp_GenOutEnableSync(true);
     sleep(2);
-    rp_GenTrigger(RP_CH_1);
+    rp_GenTriggerOnly(RP_CH_1);
     sleep(2);
-    rp_GenTrigger(RP_CH_2);
+    rp_GenTriggerOnly(RP_CH_2);
     sleep(1);
     rp_GenSynchronise();
 
