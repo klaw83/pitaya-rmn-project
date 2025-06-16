@@ -100,7 +100,7 @@ int main(int argc, char **argv)
     rp_AcqAxiGetDataRaw(RP_CH_2, posChB, &size2, buff2);
 
     for (int i = 0; i < dsize; i++) {
-        printf("[%d]\t%d\t%d\n",i,buff1[i], buff2[i]);
+        printf("[%d]\t%d\t%p\n",i,buff1[i], buff1+i);
     }
 
     /* Releasing resources */
