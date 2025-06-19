@@ -11,7 +11,7 @@
 int main(int argc, char **argv)
 {
     int dsize = DATA_SIZE;
-    uint32_t dec = 8192;
+    uint32_t dec = 1;
     if (argc >= 3){
         dsize = atoi(argv[1]);
         dec = atoi(argv[2]);
