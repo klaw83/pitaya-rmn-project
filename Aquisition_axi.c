@@ -7,6 +7,7 @@
 #include "rp.h"
 
 #define DATA_SIZE 64
+#define SAMPLE_RATE 125000000
 
 int main(int argc, char **argv)
 {
@@ -16,7 +17,7 @@ int main(int argc, char **argv)
     if (argc >= 4){
         dsize = atoi(argv[1]);
         dec = atoi(argv[2]);
-        nomFichier = argv[3];
+        nomFichier = argv[3]; "modifier pour être sur qu'on met bien le nom d'un fichier .csv"
     }
 
     /* Creation du ficher pour recolter les resultats*/
@@ -36,7 +37,7 @@ int main(int argc, char **argv)
     uint32_t g_adc_axi_start,g_adc_axi_size;
     rp_AcqAxiGetMemoryRegion(&g_adc_axi_start,&g_adc_axi_size);
 
-    printf("Reserved memory start 0x%X size 0x%X\n",g_adc_axi_start,g_adc_axi_size);
+    printf("Reserved memory start 0x%X size 0x%X bytes\n",g_adc_axi_start,g_adc_axi_size);
 //    rp_AcqResetFpga();
 
     if (rp_AcqAxiSetDecimationFactor(dec) != RP_OK) {
@@ -56,7 +57,6 @@ int main(int argc, char **argv)
         return -1;
     }
     
-
     rp_AcqSetTriggerLevel(RP_T_CH_1,0);
 
     if (rp_AcqStart() != RP_OK) {
@@ -86,7 +86,7 @@ int main(int argc, char **argv)
 
     uint32_t posChA;
     rp_AcqAxiGetWritePointerAtTrig(RP_CH_1,&posChA);
-    fprintf(stderr,"Tr pos1: 0x%X",posChA);
+    fprintf(stderr,"Tr pos1: 0x%X\n",posChA);
 
     float *buff1 = (float *)malloc(dsize * sizeof(float));
 
@@ -95,10 +95,18 @@ int main(int argc, char **argv)
 
 
     for (int i = 0; i < dsize; i++) {
-        printf("[%d]\t%f\n",i,buff1[i]);
+        // printf("[%d]\t%f\n",i,buff1[i]);
         fprintf(fichier, "%f", buff1[i]);
         if (i!= dsize -1) fprintf(fichier, ",");
     }
+    fprintf(fichier, "\n");
+    
+    for (int i = 0; i < dsize; i++) {
+        float time = (i/SAMPLE_RATE)*dec;
+        fprintf(fichier, "%f", time);
+        if (i!= dsize -1) fprintf(fichier, ",");
+    }
+
     fprintf(fichier, "\n");
     fclose(fichier);
 
