@@ -77,7 +77,7 @@ int main(int argc, char **argv)
     uint32_t posChA;
     rp_AcqAxiGetWritePointerAtTrig(RP_CH_1,&posChA);
 
-    fprintf(stderr,"Tr pos1: 0x%X pos2: 0x%X\n",posChA,posChB);
+    fprintf(stderr,"Tr pos1: 0x%X pos2: 0x%X\n",posChA);
 
     int16_t *buff1 = (int16_t *)malloc(dsize * sizeof(int16_t));
 
@@ -85,7 +85,7 @@ int main(int argc, char **argv)
     rp_AcqAxiGetDataV(RP_CH_1, posChA, &size1, buff1);
 
     for (int i = 0; i < dsize; i++) {
-        printf("[%d]\t%d\t%p\n",i,buff1[i]);
+        printf("[%d]\t%d\n",i,buff1[i]);
     }
 
     /* Releasing resources */
