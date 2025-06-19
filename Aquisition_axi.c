@@ -11,7 +11,7 @@
 int main(int argc, char **argv)
 {
     int dsize = DATA_SIZE;
-    uint32_t dec = 1;
+    uint32_t dec = 8192;
     if (argc >= 3){
         dsize = atoi(argv[1]);
         dec = atoi(argv[2]);
@@ -37,26 +37,15 @@ int main(int argc, char **argv)
         fprintf(stderr, "rp_AcqAxiSetTriggerDelay RP_CH_1 failed!\n");
         return -1;
     }
-    if (rp_AcqAxiSetTriggerDelay(RP_CH_2, dsize  ) != RP_OK) {
-        fprintf(stderr, "rp_AcqAxiSetTriggerDelay RP_CH_2 failed!\n");
-        return -1;
-    }
     if (rp_AcqAxiSetBufferSamples(RP_CH_1, g_adc_axi_start, dsize) != RP_OK) {
         fprintf(stderr, "rp_AcqAxiSetBuffer RP_CH_1 failed!\n");
-        return -1;
-    }
-    if (rp_AcqAxiSetBufferSamples(RP_CH_2, g_adc_axi_start + g_adc_axi_size / 2, dsize) != RP_OK) {
-        fprintf(stderr, "rp_AcqAxiSetBuffer RP_CH_2 failed!\n");
         return -1;
     }
     if (rp_AcqAxiEnable(RP_CH_1, true)) {
         fprintf(stderr, "rp_AcqAxiEnable RP_CH_1 failed!\n");
         return -1;
     }
-    if (rp_AcqAxiEnable(RP_CH_2, true)) {
-        fprintf(stderr, "rp_AcqAxiEnable RP_CH_2 failed!\n");
-        return -1;
-    }
+    
 
     rp_AcqSetTriggerLevel(RP_T_CH_1,0);
 
@@ -85,29 +74,23 @@ int main(int argc, char **argv)
     }
     rp_AcqStop();
 
-    uint32_t posChA,posChB;
+    uint32_t posChA;
     rp_AcqAxiGetWritePointerAtTrig(RP_CH_1,&posChA);
-    rp_AcqAxiGetWritePointerAtTrig(RP_CH_2,&posChB);
 
     fprintf(stderr,"Tr pos1: 0x%X pos2: 0x%X\n",posChA,posChB);
 
     int16_t *buff1 = (int16_t *)malloc(dsize * sizeof(int16_t));
-    int16_t *buff2 = (int16_t *)malloc(dsize * sizeof(int16_t));
 
     uint32_t size1 = dsize;
-    uint32_t size2 = dsize;
-    rp_AcqAxiGetDataRaw(RP_CH_1, posChA, &size1, buff1);
-    rp_AcqAxiGetDataRaw(RP_CH_2, posChB, &size2, buff2);
+    rp_AcqAxiGetDataV(RP_CH_1, posChA, &size1, buff1);
 
     for (int i = 0; i < dsize; i++) {
-        printf("[%d]\t%d\t%p\n",i,buff1[i], buff1+i);
+        printf("[%d]\t%d\t%p\n",i,buff1[i]);
     }
 
     /* Releasing resources */
     rp_AcqAxiEnable(RP_CH_1, false);
-    rp_AcqAxiEnable(RP_CH_2, false);
     rp_Release();
     free(buff1);
-    free(buff2);
     return 0;
 }
