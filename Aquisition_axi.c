@@ -86,7 +86,6 @@ int main(int argc, char **argv)
 
     uint32_t posChA;
     rp_AcqAxiGetWritePointerAtTrig(RP_CH_1,&posChA);
-
     fprintf(stderr,"Tr pos1: 0x%X",posChA);
 
     float *buff1 = (float *)malloc(dsize * sizeof(float));
@@ -97,7 +96,8 @@ int main(int argc, char **argv)
 
     for (int i = 0; i < dsize; i++) {
         printf("[%d]\t%f\n",i,buff1[i]);
-        fprintf(fichier, "%f,", buff1[i]);
+        fprintf(fichier, "%f", buff1[i]);
+        if (i!=dzise-1): fprintf(fichier, ",");
     }
     fprintf(fichier, "\n");
     fclose(fichier);
