@@ -102,8 +102,8 @@ int main(int argc, char **argv)
     fprintf(fichier, "\n");
 
     for (int i = 0; i < dsize; i++) {
-        float time = (float)(i/SAMPLE_RATE)*dec;
-        fprintf(fichier, "%f", time);
+        float time = (float)i/(float)SAMPLE_RATE*dec;
+	fprintf(fichier, "%f", time);
         if (i!= dsize -1) fprintf(fichier, ",");
     }
 
