@@ -1,0 +1,39 @@
+# Fichier .gitignore
+
+# 1. Ignorer les dossiers spécifiques
+#    Utiliser un slash à la fin pour s'assurer qu'on ignore bien un dossier
+#    et non un fichier du même nom.
+rp-api/
+
+# 2. Ignorer les fichiers par extension
+#    L'astérisque (*) est un caractère joker qui signifie "n'importe quel nom de fichier".
+
+# Ignorer les fichiers objets (.o, .obj)
+*.o
+*.obj
+
+# Ignorer les fichiers exécutables
+# Sur Windows, ils finissent souvent par .exe, .dll, .bat, etc.
+*.exe
+*.dll
+*.bat
+*.com
+*.msi
+
+# Sur Linux/macOS, les exécutables n'ont souvent pas d'extension.
+# On utilise une astuce : on ignore tous les fichiers qui n'ont PAS d'extension.
+# Attention : cette règle est puissante et peut ignorer des fichiers que vous
+# souhaiteriez garder (comme un `Makefile`). Décommentez-la avec prudence.
+# *[!.]
+
+# Une approche plus sûre est d'ignorer les noms d'exécutables courants
+# si vous les connaissez à l'avance.
+# mon_programme
+# un_autre_executable
+
+# 3. Ignorer les fichiers de dépendances et de build (optionnel mais recommandé)
+#    Souvent, des dossiers comme `build/` ou `bin/` sont créés. Il est bon
+#    de les ignorer également.
+build/
+bin/
+*.out
