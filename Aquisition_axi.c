@@ -17,7 +17,7 @@ int main(int argc, char **argv)
     if (argc >= 4){
         dsize = atoi(argv[1]);
         dec = atoi(argv[2]);
-        nomFichier = argv[3]; "modifier pour être sur qu'on met bien le nom d'un fichier .csv"
+        nomFichier = argv[3]; //modifier pour être sur qu'on met bien le nom d'un fichier .csv"
     }
 
     /* Creation du ficher pour recolter les resultats*/
@@ -100,7 +100,7 @@ int main(int argc, char **argv)
         if (i!= dsize -1) fprintf(fichier, ",");
     }
     fprintf(fichier, "\n");
-    
+
     for (int i = 0; i < dsize; i++) {
         float time = (i/SAMPLE_RATE)*dec;
         fprintf(fichier, "%f", time);
