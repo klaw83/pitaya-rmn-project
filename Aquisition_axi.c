@@ -97,12 +97,12 @@ int main(int argc, char **argv)
 
     for (int i = 0; i < dsize; i++) {
         printf("[%d]\t%f\n",i,buff1[i]);
-        fprintf(fichier, "%f,", buff[i]);
+        fprintf(fichier, "%f,", buff1[i]);
     }
     fprintf(fichier, "\n");
     fclose(fichier);
 
-    
+
     /* Releasing resources */
     rp_AcqAxiEnable(RP_CH_1, false);
     rp_Release();
