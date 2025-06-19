@@ -85,7 +85,7 @@ int main(int argc, char **argv)
     rp_AcqAxiGetDataV(RP_CH_1, posChA, &size1, buff1);
 
     for (int i = 0; i < dsize; i++) {
-        printf("[%d]\t%d\n",i,buff1[i]);
+        printf("[%d]\t%f\n",i,buff1[i]);
     }
 
     /* Releasing resources */
