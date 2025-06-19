@@ -79,7 +79,7 @@ int main(int argc, char **argv)
 
     fprintf(stderr,"Tr pos1: 0x%X pos2: 0x%X\n",posChA);
 
-    int16_t *buff1 = (int16_t *)malloc(dsize * sizeof(int16_t));
+    float *buff1 = (float *)malloc(dsize * sizeof(float));
 
     uint32_t size1 = dsize;
     rp_AcqAxiGetDataV(RP_CH_1, posChA, &size1, buff1);
