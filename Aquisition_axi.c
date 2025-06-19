@@ -97,7 +97,7 @@ int main(int argc, char **argv)
 
     for (int i = 0; i < dsize; i++) {
         printf("[%d]\t%f\n",i,buff1[i]);
-        fprintf(fichier, "%f,", buff1[i]);
+        fprintf(fichier, "%f\t", buff1[i]);
     }
     fprintf(fichier, "\n");
     fclose(fichier);
