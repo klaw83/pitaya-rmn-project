@@ -77,7 +77,7 @@ int main(int argc, char **argv)
     uint32_t posChA;
     rp_AcqAxiGetWritePointerAtTrig(RP_CH_1,&posChA);
 
-    fprintf(stderr,"Tr pos1: 0x%X pos2: 0x%X\n",posChA);
+    fprintf(stderr,"Tr pos1: 0x%X",posChA);
 
     float *buff1 = (float *)malloc(dsize * sizeof(float));
 
