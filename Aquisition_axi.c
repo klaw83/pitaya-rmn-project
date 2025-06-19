@@ -12,9 +12,19 @@ int main(int argc, char **argv)
 {
     int dsize = DATA_SIZE;
     uint32_t dec = 64;
-    if (argc >= 3){
+    char* nomFichier = "donnees.csv";
+    if (argc >= 4){
         dsize = atoi(argv[1]);
         dec = atoi(argv[2]);
+        nomFichier = argv[3];
+    }
+
+    /* Creation du ficher pour recolter les resultats*/
+    FILE *fichier = fopen(nomFichier, "w");
+
+    if (fichier == NULL) {
+        perror("Erreur lors de l'ouverture du fichier");
+        return EXIT_FAILURE; // Quitter le programme avec un code d'erreur
     }
 
     /* Print error, if rp_Init() function failed */
@@ -84,10 +94,15 @@ int main(int argc, char **argv)
     uint32_t size1 = dsize;
     rp_AcqAxiGetDataV(RP_CH_1, posChA, &size1, buff1);
 
+
     for (int i = 0; i < dsize; i++) {
         printf("[%d]\t%f\n",i,buff1[i]);
+        fprintf(fichier, "%f,", buff[i]);
     }
+    fprintf(fichier, "\n");
+    fclose(fichier);
 
+    
     /* Releasing resources */
     rp_AcqAxiEnable(RP_CH_1, false);
     rp_Release();
