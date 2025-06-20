@@ -23,14 +23,13 @@ int main (int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    rp_AcqSetTriggerLevel(RP_T_CH_1,1);
-
     if (rp_AcqStart() != RP_OK) {
         fprintf(stderr, "rp_AcqStart failed!\n");
         return -1;
     }
 
     rp_AcqSetTriggerSrc(RP_TRIG_SRC_CHA_PE);
+    rp_AcqSetTriggerLevel(RP_T_CH_1,1);
     rp_acq_trig_state_t state = RP_TRIG_STATE_TRIGGERED;
     
     //Activation du port out1
@@ -66,7 +65,7 @@ int main (int argc, char **argv) {
 
     //déclenchement out1 NOW
     rp_GenTriggerOnly(RP_CH_1);
-    
+
     rp_DpinSetState(led, RP_LOW);
     rp_DpinSetState(led+1, RP_LOW);
     // Releasing resources
