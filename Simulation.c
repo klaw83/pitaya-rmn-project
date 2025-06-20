@@ -52,7 +52,9 @@ int main (int argc, char **argv) {
     while (retries--){
         rp_AcqGetTriggerState(&state);
         if(state == RP_TRIG_STATE_TRIGGERED){
-        break;
+            break;
+        }
+            
         //led indiquant que la simulation tourne
         rp_DpinSetState(led, RP_HIGH);
         rp_DpinSetState(led+1, RP_LOW);
@@ -60,9 +62,6 @@ int main (int argc, char **argv) {
         rp_DpinSetState(led, RP_LOW);
         rp_DpinSetState(led+1, RP_HIGH);
         usleep(period/2);
-        
-        }
-    
     }
 
     //déclenchement out1 NOW
