@@ -14,6 +14,7 @@ PRGS =  sin\
 	Burst\
 	Aquisition_axi\
 	digital_led_blink\
+	Simulation\
 
 OBJS := $(patsubst %,%.o,$(PRGS))
 SRC := $(patsubst %,%.c,$(PRGS))
