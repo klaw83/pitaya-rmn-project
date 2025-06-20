@@ -67,10 +67,6 @@ int main (int argc, char **argv) {
     //déclenchement out1 NOW
     rp_GenTriggerOnly(RP_CH_1);
     
-    while(rp_GenGetBurstLastValue(rp_channel_t channel, float *amplitude) != RP_OK){
-        rp_DpinSetState(led, RP_HIGH);
-        rp_DpinSetState(led+1, RP_HIGH);
-    }
     rp_DpinSetState(led, RP_LOW);
     rp_DpinSetState(led+1, RP_LOW);
     // Releasing resources
