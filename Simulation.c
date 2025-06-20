@@ -22,7 +22,10 @@ int main (int argc, char **argv) {
         fprintf(stderr, "Red Pitaya API init failed!\n");
         return EXIT_FAILURE;
     }
-
+    if (rp_AcqReset() != RP_OK) {
+        fprintf(stderr, "rp_AcqReser failed!\n");
+        return -1;
+    }
     if (rp_AcqStart() != RP_OK) {
         fprintf(stderr, "rp_AcqStart failed!\n");
         return -1;
