@@ -13,6 +13,7 @@ LDLIBS += -lrp-hw -lm -lstdc++ -lpthread -li2c -lsocketcan
 PRGS =  sin\
 	Burst\
 	Aquisition_axi\
+	digital_led_blink\
 
 OBJS := $(patsubst %,%.o,$(PRGS))
 SRC := $(patsubst %,%.c,$(PRGS))
