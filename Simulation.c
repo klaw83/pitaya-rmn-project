@@ -23,7 +23,7 @@ int main (int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    rp_AcqSetTriggerLevel(RP_T_CH_1,0);
+    rp_AcqSetTriggerLevel(RP_T_CH_1,1);
 
     if (rp_AcqStart() != RP_OK) {
         fprintf(stderr, "rp_AcqStart failed!\n");
@@ -47,7 +47,7 @@ int main (int argc, char **argv) {
             break;
         }
     }
-    
+
     rp_DpinSetState(led, RP_LOW);
     // Releasing resources
     rp_Release();
