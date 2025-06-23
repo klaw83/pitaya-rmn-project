@@ -82,7 +82,7 @@ int main(int argc, char **argv)
  */
     rp_GenReset();
 
-    rp_GenWaveform(RP_CH_1, SINE);
+    rp_GenWaveform(RP_CH_1, RP_WAVEFORM_SINE);
     rp_GenFreq(RP_CH_1, 1000);
     rp_GenAmp(RP_CH_1, 2.0);
 
