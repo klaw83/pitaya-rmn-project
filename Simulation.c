@@ -4,7 +4,7 @@
 #include "rp.h"
 
 int main (int argc, char **argv) {
-    int unsigned period = 10; // uS
+    int unsigned period = 100; // uS
     int unsigned led;
 
 
