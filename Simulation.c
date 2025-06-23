@@ -51,8 +51,8 @@ int main (int argc, char **argv) {
     int unsigned retries = 120; //durée de la simulation en s
     while (retries--){
         rp_AcqGetTriggerState(&state);
-        printf("trigger %d",state);
         if(state == RP_TRIG_STATE_TRIGGERED){
+            printf("trigger %d\n",state);
             break;
         }
         /*     
