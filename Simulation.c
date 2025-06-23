@@ -54,6 +54,7 @@ int main (int argc, char **argv) {
         if(state == RP_TRIG_STATE_TRIGGERED){
             printf("trigger\n");
             rp_GenOutEnable(RP_CH_1);
+    
             //déclenchement out1 NOW
             rp_GenTriggerOnly(RP_CH_1);
             break;
@@ -62,9 +63,13 @@ int main (int argc, char **argv) {
              
         //led indiquant que la simulation tourne
         rp_DpinSetState(led, RP_HIGH);
+        usleep(period/10);
     }
 
+    
+
     rp_DpinSetState(led, RP_LOW);
+    rp_DpinSetState(led+1, RP_LOW);
     // Releasing resources
     rp_Release();
 
