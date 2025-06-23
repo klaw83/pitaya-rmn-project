@@ -80,6 +80,20 @@ int main(int argc, char **argv)
         }
     }
  */
+    rp_GenReset();
+
+    rp_GenWaveform(RP_CH_1, SINE);
+    rp_GenFreq(RP_CH_1, 1000);
+    rp_GenAmp(RP_CH_1, 2.0);
+
+    rp_GenMode(RP_CH_1, RP_GEN_MODE_BURST);
+    rp_GenBurstCount(RP_CH_1, Larmor_frequency_Hertz);
+    rp_GenBurstRepetitions(RP_CH_1, 1000);
+    rp_GenBurstPeriod(RP_CH_1, 1);
+
+    rp_GenOutEnable(RP_CH_1);
+    rp_GenTriggerOnly(RP_CH_1);
+    
     printf("sleep");
     usleep(excitation_duration_microseconds);
     rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW);
