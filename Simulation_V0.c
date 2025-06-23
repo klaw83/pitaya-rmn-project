@@ -4,11 +4,10 @@
 #include "rp.h"
 
 int main (int argc, char **argv) {
+    int unsigned period = 100; // uS
     int unsigned led;
 
-    float excitation_duration_microseconds = 41.027;
-    float excitation_amplitude_Volts = 0.19;
-    float Larmor_frequency_Hertz = 24378040.422;
+
     if (argc > 1) {
         led = atoi(argv[1]);
     }
@@ -33,18 +32,18 @@ int main (int argc, char **argv) {
     }
 
     rp_AcqSetTriggerSrc(RP_TRIG_SRC_CHA_PE);
-    rp_AcqSetTriggerLevel(RP_T_CH_1,excitation_amplitude_Volts);
+    rp_AcqSetTriggerLevel(RP_T_CH_1,1);
     rp_acq_trig_state_t state = RP_TRIG_STATE_WAITING;
     
     //Activation du port out1
     rp_GenReset();
 
-    rp_GenWaveform(RP_CH_1, SINE);
+    rp_GenWaveform(RP_CH_1, RP_WAVEFORM_SQUARE);
     rp_GenFreq(RP_CH_1, 1000);
     rp_GenAmp(RP_CH_1, 2.0);
 
     rp_GenMode(RP_CH_1, RP_GEN_MODE_BURST);
-    rp_GenBurstCount(RP_CH_1, Larmor_frequency_Hertz);
+    rp_GenBurstCount(RP_CH_1, 1000);
     rp_GenBurstRepetitions(RP_CH_1, 1000);
     rp_GenBurstPeriod(RP_CH_1, 1);
     
@@ -52,16 +51,18 @@ int main (int argc, char **argv) {
     while (1){
         rp_AcqGetTriggerState(&state);
         if(state == RP_TRIG_STATE_TRIGGERED){
-            usleep(excitation_duration_microseconds);
+            printf("trigger\n");
             rp_GenOutEnable(RP_CH_1);
-            rp_GenTriggerOnly(RP_CH_1); //déclenchement out1 NOW
+    
+            //déclenchement out1 NOW
+            rp_GenTriggerOnly(RP_CH_1);
             break;
         }
 
-        
+             
         //led indiquant que la simulation tourne
         rp_DpinSetState(led, RP_HIGH);
-        usleep(1);
+        usleep(period/10);
     }
 
     

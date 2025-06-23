@@ -13,6 +13,13 @@ int main(int argc, char **argv)
 {
     int dsize = DATA_SIZE;
     uint32_t dec = 64;
+
+    float excitation_duration_seconds = 41.027e-06;
+    float excitation_duration_nanoseconds = 41.027e-06*1 000 000 000
+    float excitation_amplitude_Volts = 0.19;
+    float Larmor_frequency_Hertz = 24378040.422;
+    uint32_t excitation_burst_cycles =Larmor_frequency_Hertz * excitation_duration_seconds;
+
     char* nomFichier = "donnees.csv";
     if (argc >= 4){
         dsize = atoi(argv[1]);
@@ -44,7 +51,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "rp_AcqAxiSetDecimationFactor failed!\n");
         return -1;
     }
-    if (rp_AcqAxiSetTriggerDelay(RP_CH_1, dsize  )  != RP_OK) {
+    if (rp_AcqAxiSetTriggerDelay(RP_CH_1, -8192 )  != RP_OK) { //Trigger at the begining of the buffer
         fprintf(stderr, "rp_AcqAxiSetTriggerDelay RP_CH_1 failed!\n");
         return -1;
     }
@@ -56,15 +63,13 @@ int main(int argc, char **argv)
         fprintf(stderr, "rp_AcqAxiEnable RP_CH_1 failed!\n");
         return -1;
     }
-    
-    rp_AcqSetTriggerLevel(RP_T_CH_1,0);
 
     if (rp_AcqStart() != RP_OK) {
         fprintf(stderr, "rp_AcqStart failed!\n");
         return -1;
     }
 
-    rp_AcqSetTriggerSrc(RP_TRIG_SRC_CHA_PE);
+/*     rp_AcqSetTriggerSrc(RP_TRIG_SRC_CHA_PE);
     rp_acq_trig_state_t state = RP_TRIG_STATE_TRIGGERED;
 
     while(1){
@@ -74,7 +79,10 @@ int main(int argc, char **argv)
             break;
         }
     }
-
+ */
+    nsleep(excitation_duration_nanoseconds);
+    rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW);
+    
     bool fillState = false;
     while (!fillState) {
         if (rp_AcqAxiGetBufferFillState(RP_CH_1, &fillState) != RP_OK) {
@@ -82,6 +90,7 @@ int main(int argc, char **argv)
             return -1;
         }
     }
+
     rp_AcqStop();
 
     uint32_t posChA;
