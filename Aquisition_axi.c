@@ -69,17 +69,8 @@ int main(int argc, char **argv)
     }
     
 
-/*     rp_AcqSetTriggerSrc(RP_TRIG_SRC_CHA_PE);
-    rp_acq_trig_state_t state = RP_TRIG_STATE_TRIGGERED;
-
-    while(1){
-        rp_AcqGetTriggerState(&state);
-        if(state == RP_TRIG_STATE_TRIGGERED){
-            sleep(1);
-            break;
-        }
-    }
- */
+   //rp_AcqSetTriggerSrc(RP_TRIG_SRC_CHA_PE);
+ 
     rp_GenReset();
 
     rp_GenWaveform(RP_CH_1, RP_WAVEFORM_SINE);
@@ -100,7 +91,17 @@ int main(int argc, char **argv)
     printf("sleep");
     usleep(excitation_duration_microseconds);
     rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW);
-    
+        
+    rp_acq_trig_state_t state = RP_TRIG_STATE_TRIGGERED;
+    while(1){
+        rp_AcqGetTriggerState(&state);
+        if(state == RP_TRIG_STATE_TRIGGERED){
+            sleep(1);
+            break;
+        }
+    }
+
+
     bool fillState = false;
     while (!fillState) {
         if (rp_AcqAxiGetBufferFillState(RP_CH_1, &fillState) != RP_OK) {
