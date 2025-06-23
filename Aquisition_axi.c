@@ -90,7 +90,7 @@ int main(int argc, char **argv)
     rp_GenBurstCount(RP_CH_1, Larmor_frequency_Hertz);
     rp_GenBurstRepetitions(RP_CH_1, 1000);
     rp_GenBurstPeriod(RP_CH_1, 1);
-
+    printf("enable");
     rp_GenOutEnable(RP_CH_1);
     rp_GenTriggerOnly(RP_CH_1);
 
