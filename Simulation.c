@@ -52,9 +52,14 @@ int main (int argc, char **argv) {
     while (retries--){
         rp_AcqGetTriggerState(&state);
         if(state == RP_TRIG_STATE_TRIGGERED){
-            printf("trigger %d\n",state);
+            printf("trigger\n");
+            rp_GenOutEnable(RP_CH_1);
+    
+            //déclenchement out1 NOW
+            rp_GenTriggerOnly(RP_CH_1);
             break;
         }
+
         /*     
         //led indiquant que la simulation tourne
         rp_DpinSetState(led, RP_HIGH);
@@ -65,9 +70,7 @@ int main (int argc, char **argv) {
         usleep(period/2); */
     }
 
-    rp_GenOutEnable(RP_CH_1);
-    //déclenchement out1 NOW
-    rp_GenTriggerOnly(RP_CH_1);
+    
 
     rp_DpinSetState(led, RP_LOW);
     rp_DpinSetState(led+1, RP_LOW);
