@@ -46,8 +46,6 @@ int main (int argc, char **argv) {
     rp_GenBurstCount(RP_CH_1, 1);
     rp_GenBurstRepetitions(RP_CH_1, 10);
     rp_GenBurstPeriod(RP_CH_1, 5000);
-
-    rp_GenOutEnable(RP_CH_1);
     
     //Attente
     int unsigned retries = 120; //durée de la simulation en s
@@ -66,8 +64,9 @@ int main (int argc, char **argv) {
         usleep(period/2); */
     }
 
+    rp_GenOutEnable(RP_CH_1);
     //déclenchement out1 NOW
-    rp_GenTriggerOnly(RP_CH_1);
+    //rp_GenTriggerOnly(RP_CH_1);
 
     rp_DpinSetState(led, RP_LOW);
     rp_DpinSetState(led+1, RP_LOW);
