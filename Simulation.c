@@ -63,7 +63,8 @@ int main (int argc, char **argv) {
         rp_DpinSetState(led+1, RP_HIGH);
         usleep(period/2); */
     }
-    rp_GenResetTrigger(RP_CH_1);
+    
+    rp_GenReset();
     rp_GenOutEnable(RP_CH_1);
     //déclenchement out1 NOW
     rp_GenTriggerOnly(RP_CH_1);
