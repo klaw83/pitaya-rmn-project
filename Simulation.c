@@ -48,7 +48,7 @@ int main (int argc, char **argv) {
     rp_GenBurstPeriod(RP_CH_1, 5000);
     
     //Attente
-    int unsigned retries = 120; //durée de la simulation en s
+    int unsigned retries = 10000; //durée de la simulation en s
     while (retries--){
         rp_AcqGetTriggerState(&state);
         if(state == RP_TRIG_STATE_TRIGGERED){
