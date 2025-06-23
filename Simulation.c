@@ -52,6 +52,7 @@ int main (int argc, char **argv) {
     while (retries--){
         rp_AcqGetTriggerState(&state);
         if(state == RP_TRIG_STATE_TRIGGERED){
+            printf("trigger %d",state);
             break;
         }
         /*     
@@ -63,8 +64,7 @@ int main (int argc, char **argv) {
         rp_DpinSetState(led+1, RP_HIGH);
         usleep(period/2); */
     }
-    
-    rp_GenReset();
+
     rp_GenOutEnable(RP_CH_1);
     //déclenchement out1 NOW
     rp_GenTriggerOnly(RP_CH_1);
