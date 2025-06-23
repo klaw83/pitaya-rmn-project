@@ -65,8 +65,8 @@ int main(int argc, char **argv)
     }
 
     printf("sleep"); 
-    usleep(excitation_duration_microseconds);
-    
+    usleep(41);
+
     rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW);
     rp_acq_trig_state_t state = RP_TRIG_STATE_TRIGGERED;
 
