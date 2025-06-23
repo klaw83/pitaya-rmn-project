@@ -57,7 +57,7 @@ int main(int argc, char **argv)
         return -1;
     }
     
-    rp_AcqSetTriggerLevel(RP_T_CH_1,0);
+    //rp_AcqSetTriggerLevel(RP_T_CH_1,0);
 
     if (rp_AcqStart() != RP_OK) {
         fprintf(stderr, "rp_AcqStart failed!\n");

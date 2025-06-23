@@ -45,7 +45,7 @@ int main(int argc, char **argv)
     rp_AcqAxiGetMemoryRegion(&g_adc_axi_start,&g_adc_axi_size);
 
     printf("Reserved memory start 0x%X size 0x%X bytes\n",g_adc_axi_start,g_adc_axi_size);
-    rp_AcqResetFpga();
+ //rp_AcqResetFpga();
 
     if (rp_AcqAxiSetDecimationFactor(dec) != RP_OK) {
         fprintf(stderr, "rp_AcqAxiSetDecimationFactor failed!\n");
@@ -63,7 +63,10 @@ int main(int argc, char **argv)
         fprintf(stderr, "rp_AcqAxiEnable RP_CH_1 failed!\n");
         return -1;
     }
-
+    if (rp_AcqStart() != RP_OK) {
+        fprintf(stderr, "rp_AcqStart failed!\n");
+        return -1;
+    }
     
 
 /*     rp_AcqSetTriggerSrc(RP_TRIG_SRC_CHA_PE);
@@ -88,10 +91,7 @@ int main(int argc, char **argv)
     rp_GenBurstRepetitions(RP_CH_1, 1);
     rp_GenBurstPeriod(RP_CH_1, 1);
 
-    if (rp_AcqStart() != RP_OK) {
-        fprintf(stderr, "rp_AcqStart failed!\n");
-        return -1;
-    }
+    
 
     printf("enable");
     rp_GenOutEnable(RP_CH_1);
