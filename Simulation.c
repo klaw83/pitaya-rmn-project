@@ -23,7 +23,7 @@ int main (int argc, char **argv) {
         return EXIT_FAILURE;
     }
     if (rp_AcqReset() != RP_OK) {
-        fprintf(stderr, "rp_AcqReser failed!\n");
+        fprintf(stderr, "rp_AcqReset failed!\n");
         return -1;
     }
     if (rp_AcqStart() != RP_OK) {
@@ -33,7 +33,7 @@ int main (int argc, char **argv) {
 
     rp_AcqSetTriggerSrc(RP_TRIG_SRC_CHA_PE);
     rp_AcqSetTriggerLevel(RP_T_CH_1,1);
-    rp_acq_trig_state_t state = RP_TRIG_STATE_TRIGGERED;
+    rp_acq_trig_state_t state = RP_TRIG_STATE_WAITING;
     
     //Activation du port out1
     rp_GenReset();
