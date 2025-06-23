@@ -51,7 +51,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "rp_AcqAxiSetDecimationFactor failed!\n");
         return -1;
     }
-    if (rp_AcqAxiSetTriggerDelay(RP_CH_1, -8192 )  != RP_OK) { //Trigger at the begining of the buffer
+    if (rp_AcqAxiSetTriggerDelay(RP_CH_1, 0 )  != RP_OK) { //Trigger at the begining of the buffer
         fprintf(stderr, "rp_AcqAxiSetTriggerDelay RP_CH_1 failed!\n");
         return -1;
     }
@@ -86,7 +86,7 @@ int main(int argc, char **argv)
     printf("enable");
     rp_GenOutEnable(RP_CH_1);
     rp_GenTriggerOnly(RP_CH_1);
-    
+
     printf("sleep"); 
     usleep(excitation_duration_microseconds);
     rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW);
