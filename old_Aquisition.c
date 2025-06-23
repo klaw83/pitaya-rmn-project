@@ -64,7 +64,7 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    rp_AcqSetTriggerSrc(RP_TRIG_SRC_CHA_PE);
+    rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW);
     rp_acq_trig_state_t state = RP_TRIG_STATE_TRIGGERED;
 
     while(1){
