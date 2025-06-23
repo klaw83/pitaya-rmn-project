@@ -15,7 +15,7 @@ int main(int argc, char **argv)
     uint32_t dec = 64;
 
     float excitation_duration_seconds = 41.027e-06;
-    float excitation_duration_nanoseconds = 41.027e-06*1 000 000 000
+    float excitation_duration_microseconds = 41.027e-06*1000000;
     float excitation_amplitude_Volts = 0.19;
     float Larmor_frequency_Hertz = 24378040.422;
     uint32_t excitation_burst_cycles =Larmor_frequency_Hertz * excitation_duration_seconds;
@@ -45,7 +45,7 @@ int main(int argc, char **argv)
     rp_AcqAxiGetMemoryRegion(&g_adc_axi_start,&g_adc_axi_size);
 
     printf("Reserved memory start 0x%X size 0x%X bytes\n",g_adc_axi_start,g_adc_axi_size);
-//    rp_AcqResetFpga();
+    rp_AcqResetFpga();
 
     if (rp_AcqAxiSetDecimationFactor(dec) != RP_OK) {
         fprintf(stderr, "rp_AcqAxiSetDecimationFactor failed!\n");
@@ -80,7 +80,8 @@ int main(int argc, char **argv)
         }
     }
  */
-    nsleep(excitation_duration_nanoseconds);
+    printf("sleep");
+    usleep(excitation_duration_microseconds);
     rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW);
     
     bool fillState = false;
