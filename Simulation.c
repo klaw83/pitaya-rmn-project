@@ -66,7 +66,7 @@ int main (int argc, char **argv) {
 
     rp_GenOutEnable(RP_CH_1);
     //déclenchement out1 NOW
-    //rp_GenTriggerOnly(RP_CH_1);
+    rp_GenTriggerOnly(RP_CH_1);
 
     rp_DpinSetState(led, RP_LOW);
     rp_DpinSetState(led+1, RP_LOW);
