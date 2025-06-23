@@ -64,10 +64,7 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    if (rp_AcqStart() != RP_OK) {
-        fprintf(stderr, "rp_AcqStart failed!\n");
-        return -1;
-    }
+    
 
 /*     rp_AcqSetTriggerSrc(RP_TRIG_SRC_CHA_PE);
     rp_acq_trig_state_t state = RP_TRIG_STATE_TRIGGERED;
@@ -90,6 +87,11 @@ int main(int argc, char **argv)
     rp_GenBurstCount(RP_CH_1, Larmor_frequency_Hertz);
     rp_GenBurstRepetitions(RP_CH_1, excitation_burst_cycles);
     rp_GenBurstPeriod(RP_CH_1, 1);
+
+    if (rp_AcqStart() != RP_OK) {
+        fprintf(stderr, "rp_AcqStart failed!\n");
+        return -1;
+    }
     
     printf("enable");
     rp_GenOutEnable(RP_CH_1);
