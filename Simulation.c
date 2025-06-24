@@ -60,7 +60,7 @@ int main (int argc, char **argv) {
 
         
         //led indiquant que la simulation tourne
-        rp_DpinSetState(led, RP_HIGH);
+        rp_DpinSetState(led+1, RP_HIGH);
         usleep(1);
     }
 
