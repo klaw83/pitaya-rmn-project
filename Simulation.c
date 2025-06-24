@@ -23,6 +23,7 @@ int main (int argc, char **argv) {
         fprintf(stderr, "Red Pitaya API init failed!\n");
         return EXIT_FAILURE;
     }
+    while(1){
     if (rp_AcqReset() != RP_OK) {
         fprintf(stderr, "rp_AcqReset failed!\n");
         return -1;
@@ -68,6 +69,7 @@ int main (int argc, char **argv) {
 
     rp_DpinSetState(led, RP_LOW);
     rp_DpinSetState(led+1, RP_LOW);
+}
     // Releasing resources
     rp_Release();
 
