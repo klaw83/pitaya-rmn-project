@@ -50,9 +50,9 @@ int main (int argc, char **argv) {
     rp_GenAmp(RP_CH_1, answer_amplitude_Volts);
 
     rp_GenMode(RP_CH_1, RP_GEN_MODE_BURST);
-    rp_GenBurstCount(RP_CH_1, 3500);
+    rp_GenBurstCount(RP_CH_1, 350000);
     rp_GenBurstRepetitions(RP_CH_1, 1);
-    rp_GenBurstPeriod(RP_CH_1, 10);
+    rp_GenBurstPeriod(RP_CH_1, 1);
     
     //Attente
     while (1){
