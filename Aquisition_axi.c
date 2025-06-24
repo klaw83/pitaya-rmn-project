@@ -119,7 +119,7 @@ int main(int argc, char **argv)
 
     rp_AcqAxiGetDataV(RP_CH_1, posChA, &size1, buff1);
 
-    printf("ecriture dans le fichier");
+    printf("ecriture dans le fichier\n");
     for (int i = 0; i < dsize; i++) {
         // printf("[%d]\t%f\n",i,buff1[i]);
         fprintf(fichier, "%f", buff1[i]);
