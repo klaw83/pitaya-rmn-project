@@ -28,12 +28,11 @@ int main (int argc, char **argv) {
         fprintf(stderr, "Red Pitaya API init failed!\n");
         return EXIT_FAILURE;
     }
-    
+    while(1){
     if (rp_AcqReset() != RP_OK) {
         fprintf(stderr, "rp_AcqReset failed!\n");
         return -1;
     }
-    while(1){
     if (rp_AcqStart() != RP_OK) {
         fprintf(stderr, "rp_AcqStart failed!\n");
         return -1;
@@ -47,11 +46,11 @@ int main (int argc, char **argv) {
     rp_GenReset();
 
     rp_GenWaveform(RP_CH_1, RP_WAVEFORM_SINE);
-    rp_GenFreq(RP_CH_1, 1000);
+    rp_GenFreq(RP_CH_1, Larmor_frequency_Hertz);
     rp_GenAmp(RP_CH_1, 0.5);
 
     rp_GenMode(RP_CH_1, RP_GEN_MODE_BURST);
-    rp_GenBurstCount(RP_CH_1, -1);
+    rp_GenBurstCount(RP_CH_1, 1);
     rp_GenBurstRepetitions(RP_CH_1, 1);
     rp_GenBurstPeriod(RP_CH_1, 10);
     
