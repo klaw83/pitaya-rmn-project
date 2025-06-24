@@ -26,7 +26,7 @@ int main(int argc, char **argv){
 
     for (int i = 0; i < buff_size; ++i){
         x[i] = sin(t[i]) + ((1.0/3.0) * sin(t[i] * 3));
-        y[i] = (1.0/2.0) * sin(t[i]) + (1.0/4.0) * sin(t[i] * 4);
+        y[i] = sin(t[i]);
     }
 
     /* Reset Generation */
@@ -39,7 +39,7 @@ int main(int argc, char **argv){
 
     rp_GenAmp(RP_CH_1, 0.7);
 
-    rp_GenFreq(RP_CH_1, 4000.0);
+    rp_GenFreq(RP_CH_1, 25000000.0);
 
     /* Releasing resources */
     free(y);
