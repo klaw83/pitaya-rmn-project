@@ -11,7 +11,7 @@ int main (int argc, char **argv) {
     float answer_amplitude_Volts = 0.5;
     float Larmor_frequency_Hertz = 24378040.422;
     float duration_burst_second = 1.5;
-    float number_burst_cycle = Larmor_frequency_Hertz*duration_burst_second;
+    int number_burst_cycle = Larmor_frequency_Hertz*duration_burst_second;
     if (argc > 1) {
         led = atoi(argv[1]);
     }
