@@ -10,8 +10,10 @@ int main (int argc, char **argv) {
     float excitation_amplitude_Volts = 0.1;
     float answer_amplitude_Volts = 0.5;
     float Larmor_frequency_Hertz = 24378040.422;
-    float duration_burst_second = 1.5;
+    int duration_burst_second = 1;
     int number_burst_cycle = Larmor_frequency_Hertz*duration_burst_second;
+    printf("number burst %d \n",number_burst_cycle);
+
     if (argc > 1) {
         led = atoi(argv[1]);
     }
