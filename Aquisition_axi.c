@@ -34,11 +34,11 @@ int main(int argc, char **argv)
 
     /* Creation du ficher pour recolter les resultats*/
     FILE *fichier = fopen(nomFichier, "w");
-    printf("fichier crée");
+    printf("fichier crée\n");
 
 
     if (fichier == NULL) {
-        perror("Erreur lors de l'ouverture du fichier");
+        perror("Erreur lors de l'ouverture du fichier\n");
         return EXIT_FAILURE; // Quitter le programme avec un code d'erreur
     }
 
