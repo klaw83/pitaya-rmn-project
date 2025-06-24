@@ -42,7 +42,7 @@ int main (int argc, char **argv) {
 
     rp_GenWaveform(RP_CH_1, RP_WAVEFORM_SINE);
     rp_GenFreq(RP_CH_1, 1000);
-    rp_GenAmp(RP_CH_1, 2.0);
+    rp_GenAmp(RP_CH_1, 0.5);
 
     rp_GenMode(RP_CH_1, RP_GEN_MODE_BURST);
     rp_GenBurstCount(RP_CH_1, Larmor_frequency_Hertz);
