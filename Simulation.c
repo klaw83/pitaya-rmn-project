@@ -11,7 +11,7 @@ int main (int argc, char **argv) {
     float answer_amplitude_Volts = 0.5;
     float Larmor_frequency_Hertz = 24378040.422;
     float duration_burst_second = 1.5;
-    float number_burst_cycle = duration_burst_second * Larmor_frequency_Hertz;
+    float number_burst_cycle = Larmor_frequency_Hertz*duration_burst_second;
     if (argc > 1) {
         led = atoi(argv[1]);
     }
@@ -37,7 +37,7 @@ int main (int argc, char **argv) {
     }
 
     rp_AcqSetTriggerSrc(RP_TRIG_SRC_CHA_PE);
-    rp_AcqSetTriggerLevel(RP_T_CH_1,excitation_amplitude_Volts);
+    rp_AcqSetTriggerLevel(RP_T_CH_1, excitation_amplitude_Volts);
     rp_acq_trig_state_t state = RP_TRIG_STATE_WAITING;
     
     //Activation du port out1
