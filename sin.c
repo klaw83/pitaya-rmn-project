@@ -39,7 +39,7 @@ int main(int argc, char **argv){
 
     rp_GenAmp(RP_CH_1, 0.7);
 
-    rp_GenFreq(RP_CH_1, 25000000.0);
+    rp_GenFreq(RP_CH_1, 2500.0);
 
     /* Releasing resources */
     free(y);
