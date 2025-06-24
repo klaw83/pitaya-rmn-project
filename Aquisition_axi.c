@@ -58,7 +58,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "rp_AcqAxiSetDecimationFactor failed!\n");
         return -1;
     }
-    if (rp_AcqAxiSetTriggerDelay(RP_CH_1, 0 )  != RP_OK) { //Trigger at the begining of the buffer
+    if (rp_AcqAxiSetTriggerDelay(RP_CH_1, -8191 )  != RP_OK) { //Trigger at the begining of the buffer
         fprintf(stderr, "rp_AcqAxiSetTriggerDelay RP_CH_1 failed!\n");
         return -1;
     }
