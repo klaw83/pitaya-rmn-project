@@ -13,12 +13,17 @@ int main(int argc, char **argv)
 {
     int dsize = DATA_SIZE;
     uint32_t dec =1; 
-
+    uint32_t size1 = dsize;
+    float *buff1 = (float *)malloc(dsize * sizeof(float));
+    uint32_t posChA;
+    
+    
     float excitation_duration_seconds = 41.027e-06;
     float excitation_duration_microseconds = 41.027e-06*1000000;
     float excitation_amplitude_Volts = 0.19;
     float Larmor_frequency_Hertz = 24378040.422;
     uint32_t excitation_burst_cycles =Larmor_frequency_Hertz * excitation_duration_seconds;
+    
 
     char* nomFichier = "donnees.csv";
     if (argc >= 4){
@@ -42,9 +47,9 @@ int main(int argc, char **argv)
         fprintf(stderr, "Rp api init failed!\n");
         return -1;
     }
-
     uint32_t g_adc_axi_start,g_adc_axi_size;
     rp_AcqAxiGetMemoryRegion(&g_adc_axi_start,&g_adc_axi_size);
+    
 
     printf("Reserved memory start 0x%X size 0x%X bytes\n",g_adc_axi_start,g_adc_axi_size);
  //rp_AcqResetFpga();
@@ -70,8 +75,6 @@ int main(int argc, char **argv)
         return -1;
     }
     
-    printf("burst");
-
    //rp_AcqSetTriggerSrc(RP_TRIG_SRC_CHA_PE);
     rp_GenReset();
 
@@ -85,12 +88,9 @@ int main(int argc, char **argv)
     rp_GenBurstPeriod(RP_CH_1, 1);
 
     
-
-    printf("enable");
     rp_GenOutEnable(RP_CH_1);
     rp_GenTriggerOnly(RP_CH_1);
-
-    printf("sleep"); 
+ 
     usleep(excitation_duration_microseconds);
     rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW);
     
@@ -114,13 +114,9 @@ int main(int argc, char **argv)
 
     rp_AcqStop();
 
-    uint32_t posChA;
     rp_AcqAxiGetWritePointerAtTrig(RP_CH_1,&posChA);
     fprintf(stderr,"Tr pos1: 0x%X\n",posChA);
 
-    float *buff1 = (float *)malloc(dsize * sizeof(float));
-
-    uint32_t size1 = dsize;
     rp_AcqAxiGetDataV(RP_CH_1, posChA, &size1, buff1);
 
     printf("ecriture dans le fichier");
