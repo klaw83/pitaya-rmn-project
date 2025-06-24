@@ -20,9 +20,9 @@ int main(int argc, char **argv)
     
     float excitation_duration_seconds = 41.027e-06;
     float excitation_duration_microseconds = 41.027e-06*1000000;
-    float excitation_amplitude_Volts = 0.19;
+    float excitation_amplitude_Volts = 0.5;
     float Larmor_frequency_Hertz = 24378040.422;
-    uint32_t excitation_burst_cycles =Larmor_frequency_Hertz * excitation_duration_seconds;
+    uint32_t excitation_burst_cycles = Larmor_frequency_Hertz * excitation_duration_seconds;
     
 
     char* nomFichier = "donnees.csv";
@@ -58,7 +58,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "rp_AcqAxiSetDecimationFactor failed!\n");
         return -1;
     }
-    if (rp_AcqAxiSetTriggerDelay(RP_CH_1, 0 )  != RP_OK) { //Trigger at the begining of the buffer
+    if (rp_AcqAxiSetTriggerDelay(RP_CH_1, -4 )  != RP_OK) { //Trigger at the begining of the buffer
         fprintf(stderr, "rp_AcqAxiSetTriggerDelay RP_CH_1 failed!\n");
         return -1;
     }
