@@ -70,7 +70,7 @@ int main(int argc, char **argv)
     
 
    //rp_AcqSetTriggerSrc(RP_TRIG_SRC_CHA_PE);
-     rp_GenReset();
+    rp_GenReset();
 
     rp_GenWaveform(RP_CH_1, RP_WAVEFORM_SINE);
     rp_GenFreq(RP_CH_1, Larmor_frequency_Hertz);
@@ -91,7 +91,7 @@ int main(int argc, char **argv)
     usleep(excitation_duration_microseconds);
     rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW);
     
-    rp_acq_trig_state_t state = RP_TRIG_STATE_TRIGGERED;
+    rp_acq_trig_state_t state = RP_TRIG_STATE_WAITING;
     while(1){
         rp_AcqGetTriggerState(&state);
         if(state == RP_TRIG_STATE_TRIGGERED){
