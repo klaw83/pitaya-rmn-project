@@ -7,7 +7,8 @@ int main (int argc, char **argv) {
     int unsigned led;
 
     float excitation_duration_microseconds = 41.027;
-    float excitation_amplitude_Volts = 0.19;
+    float excitation_amplitude_Volts = 0.1;
+    float answer_amplitude_Volts = 0.5;
     float Larmor_frequency_Hertz = 24378040.422;
     float duration_burst_second = 1.5;
     float number_burst_cycle = duration_burst_second * Larmor_frequency_Hertz;
@@ -44,7 +45,7 @@ int main (int argc, char **argv) {
 
     rp_GenWaveform(RP_CH_1, RP_WAVEFORM_SINE);
     rp_GenFreq(RP_CH_1, Larmor_frequency_Hertz);
-    rp_GenAmp(RP_CH_1, 0.5);
+    rp_GenAmp(RP_CH_1, answer_amplitude_Volts);
 
     rp_GenMode(RP_CH_1, RP_GEN_MODE_BURST);
     rp_GenBurstCount(RP_CH_1, number_burst_cycle);
