@@ -6,13 +6,13 @@
 #include <unistd.h>
 #include "rp.h"
 
-#define DATA_SIZE 64
+#define DATA_SIZE 524288
 #define SAMPLE_RATE 125000000
 
 int main(int argc, char **argv)
 {
     int dsize = DATA_SIZE;
-    uint32_t dec = 64;
+    uint32_t dec =1; 
 
     float excitation_duration_seconds = 41.027e-06;
     float excitation_duration_microseconds = 41.027e-06*1000000;
@@ -29,6 +29,8 @@ int main(int argc, char **argv)
 
     /* Creation du ficher pour recolter les resultats*/
     FILE *fichier = fopen(nomFichier, "w");
+    printf("fichier crée");
+
 
     if (fichier == NULL) {
         perror("Erreur lors de l'ouverture du fichier");
@@ -68,6 +70,7 @@ int main(int argc, char **argv)
         return -1;
     }
     
+    printf("burst");
 
    //rp_AcqSetTriggerSrc(RP_TRIG_SRC_CHA_PE);
     rp_GenReset();
@@ -120,7 +123,7 @@ int main(int argc, char **argv)
     uint32_t size1 = dsize;
     rp_AcqAxiGetDataV(RP_CH_1, posChA, &size1, buff1);
 
-
+    printf("ecriture dans le fichier");
     for (int i = 0; i < dsize; i++) {
         // printf("[%d]\t%f\n",i,buff1[i]);
         fprintf(fichier, "%f", buff1[i]);
