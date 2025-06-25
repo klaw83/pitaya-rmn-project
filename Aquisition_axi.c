@@ -16,7 +16,7 @@ int main(int argc, char **argv)
     uint32_t size1 = dsize;
     float *buff1 = (float *)malloc(dsize * sizeof(float));
     uint32_t posChA;
-    
+    bool fillState = false;
     
     float excitation_duration_seconds = 41.027e-06;
     float excitation_duration_microseconds = excitation_duration_seconds*1000000;
@@ -142,7 +142,7 @@ int main(int argc, char **argv)
     }
  
 
-    bool fillState = false;
+    
     printf ("wait to be filled\n");
     while (!fillState) {
         if (rp_AcqAxiGetBufferFillState(RP_CH_1, &fillState) != RP_OK) {
