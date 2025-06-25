@@ -51,9 +51,9 @@ int main (int argc, char **argv) {
         rp_GenBurstPeriod(RP_CH_1, 1);          //une micro seconde entre chaque répétition
         
         rp_GenTriggerSource(RP_CH_1, RP_GEN_TRIG_SRC_EXT_PE);
-        rp_DpinSetState(led+1, RP_HIGH);
+
         rp_GenOutEnable(RP_CH_1);
-        rp_GenTriggerOnly(RP_CH_1); //déclenchement out1 NOW
+        rp_DpinSetState(led+1, RP_HIGH);
         //led indiquant que la simulation tourne
 
 
