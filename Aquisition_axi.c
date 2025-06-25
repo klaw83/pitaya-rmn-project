@@ -99,10 +99,7 @@ int main(int argc, char **argv)
         return -1;
     }
     
-    if(rp_GenBurstCount(RP_CH_1, excitation_burst_cycles_tot) != RP_OK){
-        fprintf(stderr, "rp_GenBurstCount RP_CH_1 failed!\n");
-        return -1;
-    }
+    
     if(rp_GenBurstCount(RP_CH_1, excitation_burst_cycles_tot) != RP_OK){
         fprintf(stderr, "rp_GenBurstCount RP_CH_1 failed!\n");
         return -1;
@@ -129,12 +126,12 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    usleep(excitation_duration_microseconds);
+    //usleep(excitation_duration_microseconds);
     if( rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW) != RP_OK){
         fprintf(stderr, "rp_AcqSetTriggerSrc RP_TRIG_SRC_NOW failed!\n");
         return -1;
     }
-    
+
     rp_acq_trig_state_t state = RP_TRIG_STATE_TRIGGERED;
     while(1){
         rp_AcqGetTriggerState(&state);
