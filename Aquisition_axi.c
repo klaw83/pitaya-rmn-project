@@ -53,13 +53,17 @@ int main(int argc, char **argv)
     
 
     printf("Reserved memory start 0x%X size 0x%X bytes\n",g_adc_axi_start,g_adc_axi_size);
- //rp_AcqResetFpga();
-
+    //rp_AcqResetFpga();
+    
+    if(rp_AcqReset()!=RP_OK){
+        fprintf(stderr, "rp_AcqReset failed!\n");
+        return -1;
+    }
     if (rp_AcqAxiSetDecimationFactor(dec) != RP_OK) {
         fprintf(stderr, "rp_AcqAxiSetDecimationFactor failed!\n");
         return -1;
     }
-    if (rp_AcqAxiSetTriggerDelay(RP_CH_1, -4 )  != RP_OK) { //Trigger at the begining of the buffer
+    if (rp_AcqAxiSetTriggerDelay(RP_CH_1, 0 )  != RP_OK) { 
         fprintf(stderr, "rp_AcqAxiSetTriggerDelay RP_CH_1 failed!\n");
         return -1;
     }
