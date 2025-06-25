@@ -142,7 +142,7 @@ int main(int argc, char **argv)
     }
  
 
-    
+/*     
     printf ("wait to be filled\n");
     while (!fillState) {
         if (rp_AcqAxiGetBufferFillState(RP_CH_1, &fillState) != RP_OK) {
@@ -154,7 +154,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "rp_AcqStop failed!\n");
         return -1;
     }
-   
+  */  
 
     rp_AcqAxiGetWritePointerAtTrig(RP_CH_1,&posChA);
     fprintf(stderr,"Tr pos1: 0x%X\n",posChA);
