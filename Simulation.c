@@ -43,7 +43,7 @@ int main (int argc, char **argv) {
     rp_acq_trig_state_t state = RP_TRIG_STATE_WAITING;
     
     //Activation du port out1
-    rp_GenReset();
+    /* rp_GenReset();
 
     rp_GenWaveform(RP_CH_1, RP_WAVEFORM_SINE);
     rp_GenFreq(RP_CH_1, Larmor_frequency_Hertz);
@@ -52,7 +52,18 @@ int main (int argc, char **argv) {
     rp_GenMode(RP_CH_1, RP_GEN_MODE_BURST);
     rp_GenBurstCount(RP_CH_1, 100000000000);
     rp_GenBurstRepetitions(RP_CH_1, 1);
-    rp_GenBurstPeriod(RP_CH_1, 10);
+    rp_GenBurstPeriod(RP_CH_1, 10); */
+    
+    rp_GenReset();
+
+    rp_GenWaveform(RP_CH_1, RP_WAVEFORM_SINE);
+    rp_GenFreq(RP_CH_1, 1000);
+    rp_GenAmp(RP_CH_1, 2.0);
+
+    rp_GenMode(RP_CH_1, RP_GEN_MODE_BURST);
+    rp_GenBurstCount(RP_CH_1, Larmor_frequency_Hertz);
+    rp_GenBurstRepetitions(RP_CH_1, 1000);
+    rp_GenBurstPeriod(RP_CH_1, 1);
     
     //Attente
     while (1){
