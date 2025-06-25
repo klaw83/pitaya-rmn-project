@@ -51,10 +51,11 @@ int main (int argc, char **argv) {
         rp_GenBurstPeriod(RP_CH_1, 1);          //une micro seconde entre chaque répétition
         
         rp_GenTriggerSource(RP_CH_1, RP_GEN_TRIG_SRC_EXT_PE);
-
-/*      //Attente
         //led indiquant que la simulation tourne
         rp_DpinSetState(led+1, RP_HIGH);
+        
+/*      //Attente
+        
         while (1){
             rp_AcqGetTriggerState(&state);
             if(state == RP_TRIG_STATE_TRIGGERED){
