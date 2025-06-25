@@ -66,6 +66,8 @@ int main (int argc, char **argv) {
     rp_GenBurstPeriod(RP_CH_1, 1);          //une micro seconde entre chaque répétition
     
     //Attente
+    //led indiquant que la simulation tourne
+    rp_DpinSetState(led+1, RP_HIGH);
     while (1){
         rp_AcqGetTriggerState(&state);
         if(state == RP_TRIG_STATE_TRIGGERED){
@@ -74,10 +76,6 @@ int main (int argc, char **argv) {
             rp_GenTriggerOnly(RP_CH_1); //déclenchement out1 NOW
             break;
         }
-
-        
-        //led indiquant que la simulation tourne
-        rp_DpinSetState(led+1, RP_HIGH);
         usleep(1);
     }
 
