@@ -24,7 +24,7 @@ int main(int argc, char **argv)
     float Larmor_frequency_Hertz = 24378040.422;
     int excitation_burst_cycles_tot = Larmor_frequency_Hertz *excitation_duration_seconds;
 
-    printf("excitation_burst_cycles_tot = %d",excitation_burst_cycles_tot);
+    printf("excitation_burst_cycles_tot = %d\n",excitation_burst_cycles_tot);
 
     char* nomFichier = "donnees.csv";
     if (argc >= 4){
@@ -122,6 +122,7 @@ int main(int argc, char **argv)
  */
 
     bool fillState = false;
+    printf ("wait to be filled\n")
     while (!fillState) {
         if (rp_AcqAxiGetBufferFillState(RP_CH_1, &fillState) != RP_OK) {
             fprintf(stderr, "rp_AcqAxiGetBufferFillState RP_CH_1 failed!\n");
