@@ -24,37 +24,34 @@ int main(int argc, char **argv)
     float Larmor_frequency_Hertz = 24378040.422;
     int excitation_burst_cycles_tot = Larmor_frequency_Hertz *excitation_duration_seconds;
 
-    printf("excitation_burst_cycles_tot = %d\n",excitation_burst_cycles_tot);
-
     char* nomFichier = "donnees.csv";
     if (argc >= 4){
         dsize = atoi(argv[1]);
         dec = atoi(argv[2]);
-        nomFichier = argv[3]; //modifier pour être sur qu'on met bien le nom d'un fichier .csv"
+        nomFichier = argv[3]; //à modifier pour être sur qu'on met bien le nom d'un fichier .csv"
     }
 
     /* Creation du ficher pour recolter les resultats*/
     FILE *fichier = fopen(nomFichier, "w");
     printf("fichier crée\n");
 
-
     if (fichier == NULL) {
         perror("Erreur lors de l'ouverture du fichier\n");
         return EXIT_FAILURE; // Quitter le programme avec un code d'erreur
     }
 
+    //Initialisation
     /* Print error, if rp_Init() function failed */
     if (rp_InitReset(false) != RP_OK) {
         fprintf(stderr, "Rp api init failed!\n");
         return -1;
     }
+
     uint32_t g_adc_axi_start,g_adc_axi_size;
     rp_AcqAxiGetMemoryRegion(&g_adc_axi_start,&g_adc_axi_size);
-    
-
     printf("Reserved memory start 0x%X size 0x%X bytes\n",g_adc_axi_start,g_adc_axi_size);
-    //rp_AcqResetFpga();
     
+    //INITIALISATION AQUISITION 
     if(rp_AcqReset()!=RP_OK){
         fprintf(stderr, "rp_AcqReset failed!\n");
         return -1;
@@ -80,14 +77,27 @@ int main(int argc, char **argv)
         return -1;
     }
     
-   //rp_AcqSetTriggerSrc(RP_TRIG_SRC_CHA_PE);
-    rp_GenReset();
-
-    rp_GenWaveform(RP_CH_1, RP_WAVEFORM_SINE);
-    rp_GenFreq(RP_CH_1, Larmor_frequency_Hertz);
-    rp_GenAmp(RP_CH_1, excitation_amplitude_Volts);
-
-    rp_GenMode(RP_CH_1, RP_GEN_MODE_BURST);
+   //INITIALISATION GENERATION
+    if(rp_GenReset() != RP_OK){
+        fprintf(stderr, "rp_GenReset failed!\n");
+        return -1;
+    }
+    if(rp_GenWaveform(RP_CH_1, RP_WAVEFORM_SINE) != RP_OK){
+        fprintf(stderr, "rp_GenWaveform RP_CH_1 SINE failed!\n");
+        return -1;
+    }
+    if(rp_GenFreq(RP_CH_1, Larmor_frequency_Hertz) != RP_OK){
+        fprintf(stderr, "rp_GenFreq RP_CH_1 failed!\n");
+        return -1;
+    }
+    if(rp_GenAmp(RP_CH_1, excitation_amplitude_Volts) != RP_OK){
+        fprintf(stderr, "rp_GenAmp RP_CH_1 failed!\n");
+        return -1;
+    }
+    if(rp_GenMode(RP_CH_1, RP_GEN_MODE_BURST) != RP_OK){
+        fprintf(stderr, "rp_GenMode RP_CH_1 BURST failed!\n");
+        return -1;
+    }
     
     if(rp_GenBurstCount(RP_CH_1, excitation_burst_cycles_tot) != RP_OK){
         fprintf(stderr, "rp_GenBurstCount RP_CH_1 failed!\n");
