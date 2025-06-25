@@ -60,7 +60,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "rp_AcqAxiSetDecimationFactor failed!\n");
         return -1;
     }
-    if (rp_AcqAxiSetTriggerDelay(RP_CH_1, 0)  != RP_OK) { 
+    if (rp_AcqAxiSetTriggerDelay(RP_CH_1, dsize)  != RP_OK) { 
         fprintf(stderr, "rp_AcqAxiSetTriggerDelay RP_CH_1 failed!\n");
         return -1;
     }
@@ -126,7 +126,7 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    //usleep(excitation_duration_microseconds);
+    usleep(excitation_duration_microseconds);
     if( rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW) != RP_OK){
         fprintf(stderr, "rp_AcqSetTriggerSrc RP_TRIG_SRC_NOW failed!\n");
         return -1;
@@ -141,8 +141,7 @@ int main(int argc, char **argv)
         }
     }
  
-
-/*     
+    
     printf ("wait to be filled\n");
     while (!fillState) {
         if (rp_AcqAxiGetBufferFillState(RP_CH_1, &fillState) != RP_OK) {
@@ -154,11 +153,11 @@ int main(int argc, char **argv)
         fprintf(stderr, "rp_AcqStop failed!\n");
         return -1;
     }
-  */  
+  
 
     rp_AcqAxiGetWritePointerAtTrig(RP_CH_1,&posChA);
     fprintf(stderr,"Tr pos1: 0x%X\n",posChA);
-
+    
     rp_AcqAxiGetDataV(RP_CH_1, posChA, &size1, buff1);
 
     printf("ecriture dans %s\n",nomFichier);
