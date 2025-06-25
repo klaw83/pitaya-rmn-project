@@ -89,12 +89,22 @@ int main(int argc, char **argv)
         fprintf(stderr, "rp_GenBurstCount RP_CH_1 failed!\n");
         return -1;
     }
-    
+    if(rp_GenBurstCount(RP_CH_1, excitation_burst_cycles_tot) != RP_OK){
+        fprintf(stderr, "rp_GenBurstCount RP_CH_1 failed!\n");
+        return -1;
+    }
     //valeur max pour GenBurstCount = 50 000
-    rp_GenBurstRepetitions(RP_CH_1, 1);  //Répété 1 fois pour que le burst dure qq secondes
-    rp_GenBurstPeriod(RP_CH_1, 1);          //une micro seconde entre chaque répétition
-
-
+    if(rp_GenBurstRepetitions(RP_CH_1, 1) != RP_OK){
+        fprintf(stderr, "rp_GenBurstRepetitions RP_CH_1 failed!\n");
+        return -1;
+    }
+    //Répété 1 fois pour que le burst dure qq usecondes
+    if(rp_GenBurstPeriod(RP_CH_1, 1) != RP_OK){
+        fprintf(stderr, "rp_GenBurstPeriod RP_CH_1 failed!\n");
+        return -1;
+    }
+    //une micro seconde entre chaque répétition
+    
     
     if( rp_GenOutEnable(RP_CH_1) != RP_OK){
         fprintf(stderr, "rp_GenOutEnable RP_CH_1 failed!\n");
