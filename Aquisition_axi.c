@@ -111,7 +111,7 @@ int main(int argc, char **argv)
         return -1;
     }
     
-    rp_acq_trig_state_t state = RP_TRIG_STATE_WAITING;
+/*     rp_acq_trig_state_t state = RP_TRIG_STATE_WAITING;
     while(1){
         rp_AcqGetTriggerState(&state);
         if(state == RP_TRIG_STATE_TRIGGERED){
@@ -119,7 +119,7 @@ int main(int argc, char **argv)
             break;
         }
     }
-
+ */
 
     bool fillState = false;
     while (!fillState) {
