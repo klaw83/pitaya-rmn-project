@@ -57,12 +57,12 @@ int main (int argc, char **argv) {
     rp_GenReset();
 
     rp_GenWaveform(RP_CH_1, RP_WAVEFORM_SINE);
-    rp_GenFreq(RP_CH_1, 240000);
+    rp_GenFreq(RP_CH_1, Larmor_frequency_Hertz);
     rp_GenAmp(RP_CH_1, 2.0);
 
     rp_GenMode(RP_CH_1, RP_GEN_MODE_BURST);
     rp_GenBurstCount(RP_CH_1, 50000);
-    //rp_GenBurstRepetitions(RP_CH_1, 1000);
+    rp_GenBurstRepetitions(RP_CH_1, 10);
     rp_GenBurstPeriod(RP_CH_1, 1);
     
     //Attente
