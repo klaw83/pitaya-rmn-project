@@ -60,11 +60,11 @@ int main(int argc, char **argv)
         fprintf(stderr, "rp_AcqAxiSetDecimationFactor failed!\n");
         return -1;
     }
-    if (rp_AcqAxiSetTriggerDelay(RP_CH_1, )  != RP_OK) { 
+    if (rp_AcqAxiSetTriggerDelay(RP_CH_1, 0)  != RP_OK) { 
         fprintf(stderr, "rp_AcqAxiSetTriggerDelay RP_CH_1 failed!\n");
         return -1;
     }
-    if (rp_AcqAxiSetBufferSamples(RP_CH_1,(g_adc_axi_start + g_adc_axi_size) / 2, dsize) != RP_OK) {
+    if (rp_AcqAxiSetBufferSamples(RP_CH_1,g_adc_axi_start, dsize) != RP_OK) {
         fprintf(stderr, "rp_AcqAxiSetBuffer RP_CH_1 failed!\n");
         return -1;
     }
