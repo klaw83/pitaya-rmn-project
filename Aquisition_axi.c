@@ -81,7 +81,7 @@ int main(int argc, char **argv)
 
     rp_GenWaveform(RP_CH_1, RP_WAVEFORM_SINE);
     rp_GenFreq(RP_CH_1, Larmor_frequency_Hertz);
-    rp_GenAmp(RP_CH_1, 0.5);
+    rp_GenAmp(RP_CH_1, excitation_amplitude_Volts);
 
     rp_GenMode(RP_CH_1, RP_GEN_MODE_BURST);
     
@@ -91,15 +91,25 @@ int main(int argc, char **argv)
     }
     
     //valeur max pour GenBurstCount = 50 000
-    rp_GenBurstRepetitions(RP_CH_1, 1);  //Répété 1000 fois pour que le burst dure qq secondes
+    rp_GenBurstRepetitions(RP_CH_1, 1);  //Répété 1 fois pour que le burst dure qq secondes
     rp_GenBurstPeriod(RP_CH_1, 1);          //une micro seconde entre chaque répétition
 
+
     
-    rp_GenOutEnable(RP_CH_1);
-    rp_GenTriggerOnly(RP_CH_1);
- 
+    if( rp_GenOutEnable(RP_CH_1) != RP_OK){
+        fprintf(stderr, "rp_GenOutEnable RP_CH_1 failed!\n");
+        return -1;
+    }
+    if( rp_GenTriggerOnly(RP_CH_1) != RP_OK){
+        fprintf(stderr, "rp_GenTriggerOnly RP_CH_1 failed!\n");
+        return -1;
+    }
+
     usleep(excitation_duration_microseconds);
-    rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW);
+    if( rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW) != RP_OK){
+        fprintf(stderr, "rp_AcqSetTriggerSrc RP_TRIG_SRC_NOW failed!\n");
+        return -1;
+    }
     
     rp_acq_trig_state_t state = RP_TRIG_STATE_WAITING;
     while(1){
@@ -126,7 +136,7 @@ int main(int argc, char **argv)
 
     rp_AcqAxiGetDataV(RP_CH_1, posChA, &size1, buff1);
 
-    printf("ecriture dans le fichier\n");
+    printf("ecriture dans %s\n",nomFichier);
     for (int i = 0; i < dsize; i++) {
         // printf("[%d]\t%f\n",i,buff1[i]);
         fprintf(fichier, "%f", buff1[i]);
