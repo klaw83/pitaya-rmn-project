@@ -25,6 +25,8 @@ int main(int argc, char **argv)
     uint32_t excitation_burst_cycles_tot = Larmor_frequency_Hertz *excitation_duration_seconds;
     int excitation_burst_cycles = excitation_burst_cycles_tot / 50000;
     int excitation_burst_repetition = excitation_burst_cycles_tot % 50000;
+    printf("excitation_burst_cycles = %d\n",excitation_burst_cycles);
+    printf("excitation_burst_repetition = %d\n",excitation_burst_repetition);
 
     char* nomFichier = "donnees.csv";
     if (argc >= 4){
@@ -84,7 +86,13 @@ int main(int argc, char **argv)
     rp_GenAmp(RP_CH_1, 0.5);
 
     rp_GenMode(RP_CH_1, RP_GEN_MODE_BURST);
-    rp_GenBurstCount(RP_CH_1, excitation_burst_cycles);       //valeur max pour GenBurstCount
+    
+    if(rp_GenBurstCount(RP_CH_1, excitation_burst_cycles) != RP_OK){
+        fprintf(stderr, "rp_GenBurstCount RP_CH_1 failed!\n");
+        return -1;
+    }
+    
+    //valeur max pour GenBurstCount = 50 000
     rp_GenBurstRepetitions(RP_CH_1, excitation_burst_repetition);  //Répété 1000 fois pour que le burst dure qq secondes
     rp_GenBurstPeriod(RP_CH_1, 1);          //une micro seconde entre chaque répétition
 
