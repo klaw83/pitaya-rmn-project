@@ -132,7 +132,7 @@ int main(int argc, char **argv)
  */
 
     bool fillState = false;
-    printf ("wait to be filled\n")
+    printf ("wait to be filled\n");
     while (!fillState) {
         if (rp_AcqAxiGetBufferFillState(RP_CH_1, &fillState) != RP_OK) {
             fprintf(stderr, "rp_AcqAxiGetBufferFillState RP_CH_1 failed!\n");
