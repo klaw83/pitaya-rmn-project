@@ -24,8 +24,8 @@ int main(int argc, char **argv)
     FILE *fichier = fopen(nomFichier, "w");
 
     if (fichier == NULL) {
-        perror("Erreur lors de l'ouverture du fichier");
-        return EXIT_FAILURE; // Quitter le programme avec un code d'erreur
+        fprintf(stderr, "Erreur lors de l'ouverture du fichier");
+        return -1; // Quitter le programme avec un code d'erreur
     }
 
     /* Print error, if rp_Init() function failed */

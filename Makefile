@@ -1,7 +1,7 @@
-CFLAGS  = -std=gnu11 -Wall ## -Werror
+CFLAGS  = -std=gnu11 -Wall -g ## -Werror
 CFLAGS += -I/opt/redpitaya/include
 LDFLAGS = -L/opt/redpitaya/lib
-LDLIBS = -static -lrp-hw-can -lrp -lrp-hw-calib -lrp-hw-profiles
+LDLIBS = -static -lrp-hw-can -lrp -lrp-hw-calib -lrp-hw-prof	iles
 
 INCLUDE += -I/opt/redpitaya/include/api250-12
 LDLIBS += -lrp-gpio -lrp-i2c

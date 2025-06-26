@@ -72,10 +72,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "rp_AcqAxiEnable RP_CH_1 failed!\n");
         return -1;
     }
-    if (rp_AcqStart() != RP_OK) {
-        fprintf(stderr, "rp_AcqStart failed!\n");
-        return -1;
-    }
+
     
    //INITIALISATION GENERATION
     if(rp_GenReset() != RP_OK){
@@ -126,6 +123,11 @@ int main(int argc, char **argv)
         return -1;
     }
 
+
+        if (rp_AcqStart() != RP_OK) {
+        fprintf(stderr, "rp_AcqStart failed!\n");
+        return -1;
+    }
     usleep(excitation_duration_microseconds);
     if( rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW) != RP_OK){
         fprintf(stderr, "rp_AcqSetTriggerSrc RP_TRIG_SRC_NOW failed!\n");
@@ -158,7 +160,9 @@ int main(int argc, char **argv)
     rp_AcqAxiGetWritePointerAtTrig(RP_CH_1,&posChA);
     fprintf(stderr,"Tr pos1: 0x%X\n",posChA);
     
-    rp_AcqAxiGetDataV(RP_CH_1, posChA, &size1, buff1);
+    if(rp_AcqAxiGetDataV(RP_CH_1, posChA, &size1, buff1)!=RP_OK){
+        fprintf(stderr, "rp_AcqAxiGetDataV failed\n")
+    }
     
  
     printf("ecriture dans %s\n",nomFichier);
