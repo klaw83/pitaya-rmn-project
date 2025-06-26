@@ -1,4 +1,4 @@
-CFLAGS  = -std=gnu11 -Wall -g ## -Werror
+CFLAGS  = -std=gnu11 -Wall ## -Werror
 CFLAGS += -I/opt/redpitaya/include
 LDFLAGS = -L/opt/redpitaya/lib
 LDLIBS = -static -lrp-hw-can -lrp -lrp-hw-calib -lrp-hw-prof	iles
