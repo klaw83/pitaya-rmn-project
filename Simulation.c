@@ -57,11 +57,12 @@ int main (int argc, char **argv) {
         //Attente
         //led indiquant que la simulation tourne
         rp_DpinSetState(led+1, RP_HIGH);
+        rp_GenOutEnable(RP_CH_1);
         while (1){
             rp_AcqGetTriggerState(&state);
             if(state == RP_TRIG_STATE_TRIGGERED){
                 //usleep(excitation_duration_microseconds);
-                rp_GenOutEnable(RP_CH_1);
+                
                 rp_GenTriggerOnly(RP_CH_1); //déclenchement out1 NOW
                 break;
             }
