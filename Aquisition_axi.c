@@ -160,7 +160,7 @@ int main(int argc, char **argv)
     rp_AcqAxiGetWritePointerAtTrig(RP_CH_1,&posChA);
     fprintf(stderr,"Tr pos1: 0x%X\n",posChA);
     
-    if(rp_AcqAxiGetDataV(RP_CH_1, posChA, &size1, buff1)!=RP_OK){
+    if(rp_AcqAxiGetDataV(RP_CH_1, 0, &size1, buff1)!=RP_OK){
         fprintf(stderr, "rp_AcqAxiGetDataV failed\n");
     }
     
