@@ -161,7 +161,7 @@ int main(int argc, char **argv)
     fprintf(stderr,"Tr pos1: 0x%X\n",posChA);
     
     if(rp_AcqAxiGetDataV(RP_CH_1, posChA, &size1, buff1)!=RP_OK){
-        fprintf(stderr, "rp_AcqAxiGetDataV failed\n")
+        fprintf(stderr, "rp_AcqAxiGetDataV failed\n");
     }
     
  
