@@ -46,7 +46,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "Rp api init failed!\n");
         return -1;
     }
-
+    rp_AcqResetFpga();
     uint32_t g_adc_axi_start,g_adc_axi_size;
     rp_AcqAxiGetMemoryRegion(&g_adc_axi_start,&g_adc_axi_size);
     printf("Reserved memory start 0x%X size 0x%X bytes\n",g_adc_axi_start,g_adc_axi_size);
