@@ -26,7 +26,7 @@ int main(int argc, char **argv)
     int excitation_burst_cycles_tot = Larmor_frequency_Hertz *excitation_duration_seconds;
     int number_of_files = 1;
 
-    char* nomFichier = "data";
+    char* nomFichier[256] = "data";
     if (argc >= 4){
         dsize = atoi(argv[1]);
         dec = atoi(argv[2]);
