@@ -44,7 +44,7 @@ int main(int argc, char **argv)
     for (i=0;i<=number_of_files;i++){
         
         sprintf(numFichier,"data_%d.csv",i);
-        strcat(nomFichier, numFichier);
+        //strcat(nomFichier, numFichier);
         puts(nomFichier);
         /* Creation du ficher pour recolter les resultats*/
         FILE *fichier = fopen(nomFichier, "w");
