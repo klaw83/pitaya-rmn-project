@@ -62,7 +62,7 @@ int main (int argc, char **argv) {
         while (1){
             rp_AcqGetTriggerState(&state);
             if(state == RP_TRIG_STATE_TRIGGERED){
-                usleep(excitation_duration_microseconds);
+                //usleep(excitation_duration_microseconds);
                 rp_GenTriggerOnly(RP_CH_1); //déclenchement out1 NOW
                 break;
             }
