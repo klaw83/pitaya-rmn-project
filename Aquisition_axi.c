@@ -42,7 +42,7 @@ int main(int argc, char **argv)
     int i=0;
     for (i=0;i<number_of_files;i++){
         
-        sprintf(nomFichier,"data_%d.csv",i);
+        sprintf(nomFichier,"mesures/data_%d.csv",i);
         //strcat(nomFichier, numFichier);
         puts(nomFichier);
         /* Creation du ficher pour recolter les resultats*/
