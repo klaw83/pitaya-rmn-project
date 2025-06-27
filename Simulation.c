@@ -11,6 +11,7 @@ int main (int argc, char **argv) {
     float answer_amplitude_Volts = 0.5;
     float Larmor_frequency_Hertz = 24378040.422;
     int duration_burst_second = 1;
+    float precession_frequency_shifted = 1000;
     int number_burst_cycle = Larmor_frequency_Hertz*duration_burst_second;
     
     printf("number burst %d \n",number_burst_cycle);
@@ -46,23 +47,22 @@ int main (int argc, char **argv) {
 
         rp_GenReset();
         rp_GenWaveform(RP_CH_1, RP_WAVEFORM_SINE);
-        rp_GenFreq(RP_CH_1, Larmor_frequency_Hertz);
-        rp_GenAmp(RP_CH_1, 1.0);
+        rp_GenFreq(RP_CH_1, precession_frequency_shifted);
+        rp_GenAmp(RP_CH_1, 0.5);
 
         rp_GenMode(RP_CH_1, RP_GEN_MODE_BURST);
-        rp_GenBurstCount(RP_CH_1, 50000);       //valeur max pour GenBurstCount
+        rp_GenBurstCount(RP_CH_1, 50000);         //valeur max pour GenBurstCount
         rp_GenBurstRepetitions(RP_CH_1, 1000);  //Répété 1000 fois pour que le burst dure qq secondes
         rp_GenBurstPeriod(RP_CH_1, 1);          //une micro seconde entre chaque répétition
         
-        //Attente
+        //Attente de la salve d'excitation
         //led indiquant que la simulation tourne
         rp_DpinSetState(led+1, RP_HIGH);
         rp_GenOutEnable(RP_CH_1);
         while (1){
             rp_AcqGetTriggerState(&state);
             if(state == RP_TRIG_STATE_TRIGGERED){
-                //usleep(excitation_duration_microseconds);
-                
+                usleep(excitation_duration_microseconds);
                 rp_GenTriggerOnly(RP_CH_1); //déclenchement out1 NOW
                 break;
             }
