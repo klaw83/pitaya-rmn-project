@@ -66,7 +66,7 @@ int main (int argc, char **argv) {
                 rp_GenTriggerOnly(RP_CH_1); //déclenchement out1 NOW
                 break;
             }
-            usleep(1);
+            //usleep(1);
         }
 
         
