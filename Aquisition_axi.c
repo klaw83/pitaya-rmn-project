@@ -25,12 +25,11 @@ int main(int argc, char **argv)
     float Larmor_frequency_Hertz = 24378040.422;
     int excitation_burst_cycles_tot = Larmor_frequency_Hertz *excitation_duration_seconds;
     int number_of_files = 1;
+    char nomFichier[256];
 
-    char nomFichier[256]; nomFichier = "data.csv";
     if (argc >= 4){
         dsize = atoi(argv[1]);
         dec = atoi(argv[2]);
-        //nomFichier = argv[3]; //à modifier pour être sur qu'on met bien le nom d'un fichier .csv"
         number_of_files = atoi(argv[3]);
     }
 
@@ -44,7 +43,7 @@ int main(int argc, char **argv)
     char numFichier[256];
     for (i=0;i<=number_of_files;i++){
         
-        sprintf(numFichier,"_%d.csv",i);
+        sprintf(numFichier,"data_%d.csv",i);
         strcat(nomFichier, numFichier);
         puts(nomFichier);
         /* Creation du ficher pour recolter les resultats*/
