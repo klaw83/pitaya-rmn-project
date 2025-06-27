@@ -191,7 +191,7 @@ int main(int argc, char **argv)
 
         fprintf(fichier, "\n");
         fclose(fichier);
-        sleep(6);
+        sleep(10);
 
 }
 
