@@ -19,7 +19,7 @@ int main(int argc, char **argv)
     uint32_t posChA;
     bool fillState = false;
     
-    float excitation_duration_seconds = 41.027e-06;
+    float excitation_duration_seconds = 35.027e-06; //41.027e-06
     float excitation_duration_microseconds = excitation_duration_seconds*1000000;
     float excitation_amplitude_Volts = 0.5;
     float Larmor_frequency_Hertz = 24378040.422;
