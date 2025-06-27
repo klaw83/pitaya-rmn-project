@@ -19,7 +19,7 @@ int main(int argc, char **argv)
     uint32_t posChA;
     bool fillState = false;
     
-    float excitation_duration_seconds = 35.027e-06; //41.027e-06
+    float excitation_duration_seconds = 15.027e-06; //41.027e-06
     float excitation_duration_microseconds = excitation_duration_seconds*1000000;
     float excitation_amplitude_Volts = 0.5;
     float Larmor_frequency_Hertz = 24378040.422;
@@ -168,7 +168,7 @@ int main(int argc, char **argv)
         rp_AcqAxiGetWritePointerAtTrig(RP_CH_1,&posChA);
         fprintf(stderr,"Tr pos1: 0x%X\n",posChA);
         
-        if(rp_AcqAxiGetDataV(RP_CH_1, 0, &size1, buff1)!=RP_OK){
+        if(rp_AcqAxiGetDataV(RP_CH_1, posChA, &size1, buff1)!=RP_OK){
             fprintf(stderr, "rp_AcqAxiGetDataV failed\n");
         }
         
