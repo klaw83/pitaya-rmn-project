@@ -105,14 +105,12 @@ int main(int argc, char **argv)
     if(rp_GenBurstRepetitions(RP_CH_1, 1) != RP_OK){
         fprintf(stderr, "rp_GenBurstRepetitions RP_CH_1 failed!\n");
         return -1;
-    }
-    //Répété 1 fois pour que le burst dure qq usecondes
+    }//Répété 1 fois pour que le burst dure qq usecondes
+    
     if(rp_GenBurstPeriod(RP_CH_1, 1) != RP_OK){
         fprintf(stderr, "rp_GenBurstPeriod RP_CH_1 failed!\n");
         return -1;
-    }
-    //une micro seconde entre chaque répétition
-    
+    }//une micro seconde entre chaque répétition
     
     if( rp_GenOutEnable(RP_CH_1) != RP_OK){
         fprintf(stderr, "rp_GenOutEnable RP_CH_1 failed!\n");
@@ -122,11 +120,11 @@ int main(int argc, char **argv)
         fprintf(stderr, "rp_GenTriggerOnly RP_CH_1 failed!\n");
         return -1;
     }
-
-
-        if (rp_AcqStart() != RP_OK) {
-        fprintf(stderr, "rp_AcqStart failed!\n");
-        return -1;
+    
+    //LANCEMENT DE L'AQUISITION
+    if (rp_AcqStart() != RP_OK) {
+    fprintf(stderr, "rp_AcqStart failed!\n");
+    return -1;
     }
     usleep(excitation_duration_microseconds);
     if( rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW) != RP_OK){
