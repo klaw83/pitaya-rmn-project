@@ -41,8 +41,8 @@ int main(int argc, char **argv)
 
     
     int i=0;
-    char[5] numFichier;
-    for (i=0,i!=,i++){
+    char numFichier[5];
+    for (i=0,i!=number_of_files,i++){
         
         sprintf(numFichier,'_%d.csv',i);
         strcat(nomFichier, numFichier);
