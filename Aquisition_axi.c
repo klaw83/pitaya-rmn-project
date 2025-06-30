@@ -219,7 +219,7 @@ int main(int argc, char **argv)
 
         fprintf(fichier, "\n");
         fclose(fichier);
-        sleep(5);
+        sleep(0.5);
 
 }
 
