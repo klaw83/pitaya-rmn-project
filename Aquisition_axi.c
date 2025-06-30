@@ -73,7 +73,7 @@ int main(int argc, char **argv)
             fprintf(stderr, "rp_AcqAxiSetDecimationFactor failed!\n");
             return -1;
         }
-        if (rp_AcqAxiSetTriggerDelay(RP_CH_2, dsize)  != RP_OK) { 
+        if (rp_AcqAxiSetTriggerDelay(RP_CH_2, 0)  != RP_OK) { 
             fprintf(stderr, "rp_AcqAxiSetTriggerDelay RP_CH_2 failed!\n");
             return -1;
         }
