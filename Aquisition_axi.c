@@ -21,7 +21,7 @@ int main(int argc, char **argv)
     
     float excitation_duration_seconds = 15.027e-06; //41.027e-06
     float excitation_duration_microseconds = excitation_duration_seconds*1000000;
-    float excitation_amplitude_Volts = 0.5;
+    float excitation_amplitude_Volts = 0.19;
     float Larmor_frequency_Hertz = 24378040.422;
     int excitation_burst_cycles_tot = Larmor_frequency_Hertz *excitation_duration_seconds;
     float oscillator_frequency = 1000;
@@ -73,20 +73,20 @@ int main(int argc, char **argv)
             fprintf(stderr, "rp_AcqAxiSetDecimationFactor failed!\n");
             return -1;
         }
-        if (rp_AcqAxiSetTriggerDelay(RP_CH_1, dsize)  != RP_OK) { 
-            fprintf(stderr, "rp_AcqAxiSetTriggerDelay RP_CH_1 failed!\n");
+        if (rp_AcqAxiSetTriggerDelay(RP_CH_2, dsize)  != RP_OK) { 
+            fprintf(stderr, "rp_AcqAxiSetTriggerDelay RP_CH_2 failed!\n");
             return -1;
         }
-        if (rp_AcqAxiSetBufferSamples(RP_CH_1,g_adc_axi_start, dsize) != RP_OK) {
-            fprintf(stderr, "rp_AcqAxiSetBuffer RP_CH_1 failed!\n");
+        if (rp_AcqAxiSetBufferSamples(RP_CH_2,g_adc_axi_start, dsize) != RP_OK) {
+            fprintf(stderr, "rp_AcqAxiSetBuffer RP_CH_2 failed!\n");
             return -1;
         }
-        if ( rp_AcqSetGain(RP_CH_1,RP_HIGH) != RP_OK){
+        if ( rp_AcqSetGain(RP_CH_2,RP_HIGH) != RP_OK){
             fprintf(stderr, "rp_AcqSetGain CH1 Failed\n");
             return -1;
         }
-        if (rp_AcqAxiEnable(RP_CH_1, true)) {
-            fprintf(stderr, "rp_AcqAxiEnable RP_CH_1 failed!\n");
+        if (rp_AcqAxiEnable(RP_CH_2, true)) {
+            fprintf(stderr, "rp_AcqAxiEnable RP_CH_2 failed!\n");
             return -1;
         }
 
