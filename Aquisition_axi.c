@@ -81,6 +81,10 @@ int main(int argc, char **argv)
             fprintf(stderr, "rp_AcqAxiSetBuffer RP_CH_1 failed!\n");
             return -1;
         }
+        if ( rp_AcqSetGain(RP_CH_1,RP_HIGH) != RP_OK){
+            fprintf(stderr, "rp_AcqSetGain CH1 Failed\n");
+            return -1;
+        }
         if (rp_AcqAxiEnable(RP_CH_1, true)) {
             fprintf(stderr, "rp_AcqAxiEnable RP_CH_1 failed!\n");
             return -1;
