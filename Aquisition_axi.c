@@ -162,11 +162,11 @@ int main(int argc, char **argv)
             fprintf(stderr, "rp_GenTriggerOnly Both failed!\n");
             return -1;
         }
-        //usleep(excitation_duration_microseconds);
         if( rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW) != RP_OK){
             fprintf(stderr, "rp_AcqSetTriggerSrc RP_TRIG_SRC_NOW failed!\n");
             return -1;
         }
+        usleep(2000); //prec value excitation_duration_microseconds
         if( rp_GenTriggerOnly(RP_CH_1) != RP_OK){
             fprintf(stderr, "rp_GenTriggerOnly Both failed!\n");
             return -1;
