@@ -24,7 +24,7 @@ int main(int argc, char **argv)
     float excitation_amplitude_Volts = 0.19;
     float Larmor_frequency_Hertz = 24351186.267;
     int excitation_burst_cycles_tot = Larmor_frequency_Hertz *excitation_duration_seconds;
-    float oscillator_frequency = Larmor_frequency_Hertz - 1000;
+    float oscillator_frequency = Larmor_frequency_Hertz + 1000;
     float oscillator_amplitude_Volts = 0.8;
 
     int number_of_files = 1;
@@ -132,10 +132,6 @@ int main(int argc, char **argv)
             fprintf(stderr, "rp_GenOutEnable RP_CH_1 failed!\n");
             return -1;
         }
-        if( rp_GenTriggerOnly(RP_CH_1) != RP_OK){
-            fprintf(stderr, "rp_GenTriggerOnly Both failed!\n");
-            return -1;
-        }
     
     //INITIALISATION ET LANCEMENT SINE 1000HZ
         if(rp_GenWaveform(RP_CH_2, RP_WAVEFORM_SINE) != RP_OK){
@@ -159,6 +155,10 @@ int main(int argc, char **argv)
             return -1;
         }
         if( rp_GenTriggerOnly(RP_CH_2) != RP_OK){
+            fprintf(stderr, "rp_GenTriggerOnly Both failed!\n");
+            return -1;
+        }
+        if( rp_GenTriggerOnly(RP_CH_1) != RP_OK){
             fprintf(stderr, "rp_GenTriggerOnly Both failed!\n");
             return -1;
         }
