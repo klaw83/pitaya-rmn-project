@@ -168,7 +168,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "rp_AcqStart failed!\n");
         return -1;
         }
-        usleep(excitation_duration_microseconds);
+        //usleep(excitation_duration_microseconds);
         if( rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW) != RP_OK){
             fprintf(stderr, "rp_AcqSetTriggerSrc RP_TRIG_SRC_NOW failed!\n");
             return -1;
