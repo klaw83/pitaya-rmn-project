@@ -186,7 +186,7 @@ int main(int argc, char **argv)
         
         printf ("wait to be filled\n");
         while (!fillState) {
-            if (rp_AcqAxiGetBufferFillState(RP_CH_1, &fillState) != RP_OK) {
+            if (rp_AcqAxiGetBufferFillState(RP_CH_2, &fillState) != RP_OK) {
                 fprintf(stderr, "rp_AcqAxiGetBufferFillState RP_CH_1 failed!\n");
                 return -1;
             }
@@ -197,10 +197,10 @@ int main(int argc, char **argv)
                 return -1;
             }
         
-        rp_AcqAxiGetWritePointerAtTrig(RP_CH_1,&posChA);
+        rp_AcqAxiGetWritePointerAtTrig(RP_CH_2,&posChA);
         fprintf(stderr,"Tr pos1: 0x%X\n",posChA);
         
-        if(rp_AcqAxiGetDataV(RP_CH_1, posChA, &size1, buff1)!=RP_OK){
+        if(rp_AcqAxiGetDataV(RP_CH_2, posChA, &size1, buff1)!=RP_OK){
             fprintf(stderr, "rp_AcqAxiGetDataV failed\n");
         }
         
@@ -226,7 +226,7 @@ int main(int argc, char **argv)
 }
 
     /* Releasing resources */
-    rp_AcqAxiEnable(RP_CH_1, false);
+    rp_AcqAxiEnable(RP_CH_2, false);
     rp_Release();
     free(buff1);
     return 0;
