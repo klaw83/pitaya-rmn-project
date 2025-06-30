@@ -89,7 +89,11 @@ int main(int argc, char **argv)
             fprintf(stderr, "rp_AcqAxiEnable RP_CH_2 failed!\n");
             return -1;
         }
-
+    //LANCEMENT DE L'AQUISITION
+        if (rp_AcqStart() != RP_OK) {
+        fprintf(stderr, "rp_AcqStart failed!\n");
+        return -1;
+        }
         
     //INITIALISATION GENERATION BURST
         if(rp_GenReset() != RP_OK){
@@ -158,22 +162,16 @@ int main(int argc, char **argv)
             fprintf(stderr, "rp_GenTriggerOnly Both failed!\n");
             return -1;
         }
-        if( rp_GenTriggerOnly(RP_CH_1) != RP_OK){
-            fprintf(stderr, "rp_GenTriggerOnly Both failed!\n");
-            return -1;
-        }
-        
-        //LANCEMENT DE L'AQUISITION
-        if (rp_AcqStart() != RP_OK) {
-        fprintf(stderr, "rp_AcqStart failed!\n");
-        return -1;
-        }
         //usleep(excitation_duration_microseconds);
         if( rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW) != RP_OK){
             fprintf(stderr, "rp_AcqSetTriggerSrc RP_TRIG_SRC_NOW failed!\n");
             return -1;
         }
-
+        if( rp_GenTriggerOnly(RP_CH_1) != RP_OK){
+            fprintf(stderr, "rp_GenTriggerOnly Both failed!\n");
+            return -1;
+        }
+        
         rp_acq_trig_state_t state = RP_TRIG_STATE_TRIGGERED;
         while(1){
             rp_AcqGetTriggerState(&state);
