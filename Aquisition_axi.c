@@ -24,6 +24,9 @@ int main(int argc, char **argv)
     float excitation_amplitude_Volts = 0.5;
     float Larmor_frequency_Hertz = 24378040.422;
     int excitation_burst_cycles_tot = Larmor_frequency_Hertz *excitation_duration_seconds;
+    float oscillator_frequency = 1000;
+    float oscillator_amplitude_Volts = 0.8;
+
     int number_of_files = 1;
     char nomFichier[256];
 
@@ -84,7 +87,7 @@ int main(int argc, char **argv)
         }
 
         
-    //INITIALISATION GENERATION
+    //INITIALISATION GENERATION BURST
         if(rp_GenReset() != RP_OK){
             fprintf(stderr, "rp_GenReset failed!\n");
             return -1;
@@ -106,7 +109,6 @@ int main(int argc, char **argv)
             return -1;
         }
         
-        
         if(rp_GenBurstCount(RP_CH_1, excitation_burst_cycles_tot) != RP_OK){
             fprintf(stderr, "rp_GenBurstCount RP_CH_1 failed!\n");
             return -1;
@@ -127,7 +129,33 @@ int main(int argc, char **argv)
             return -1;
         }
         if( rp_GenTriggerOnly(RP_CH_1) != RP_OK){
-            fprintf(stderr, "rp_GenTriggerOnly RP_CH_1 failed!\n");
+            fprintf(stderr, "rp_GenTriggerOnly Both failed!\n");
+            return -1;
+        }
+    
+    //INITIALISATION ET LANCEMENT SINE 1000HZ
+        if(rp_GenWaveform(RP_CH_2, RP_WAVEFORM_SINE) != RP_OK){
+            fprintf(stderr, "rp_GenWaveform RP_CH_1 SINE failed!\n");
+            return -1;
+        }
+        if(rp_GenFreq(RP_CH_2, oscillator_frequency) != RP_OK){
+            fprintf(stderr, "rp_GenFreq RP_CH_1 failed!\n");
+            return -1;
+        }
+        if(rp_GenAmp(RP_CH_2, oscillator_amplitude_Volts) != RP_OK){
+            fprintf(stderr, "rp_GenAmp RP_CH_1 failed!\n");
+            return -1;
+        }
+        if(rp_GenMode(RP_CH_2, RP_GEN_MODE_CONTINUOUS) != RP_OK){
+            fprintf(stderr, "rp_GenMode RP_CH_1 BURST failed!\n");
+            return -1;
+        }
+        if( rp_GenOutEnable(RP_CH_2) != RP_OK){
+            fprintf(stderr, "rp_GenOutEnable RP_CH_1 failed!\n");
+            return -1;
+        }
+        if( rp_GenTriggerOnly(RP_CH_2) != RP_OK){
+            fprintf(stderr, "rp_GenTriggerOnly Both failed!\n");
             return -1;
         }
         
