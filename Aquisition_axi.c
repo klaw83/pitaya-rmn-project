@@ -27,6 +27,7 @@ int main(int argc, char **argv)
     float oscillator_frequency = Larmor_frequency_Hertz + 1000;
     float oscillator_amplitude_Volts = 0.8;
 
+    int delayRepeat = 5; //en secondes
     int number_of_files = 1;
     char nomFichier[256];
 
@@ -225,7 +226,7 @@ int main(int argc, char **argv)
 
         fprintf(fichier, "\n");
         fclose(fichier);
-        sleep(0.5);
+        sleep(delayRepeat);
 
 }
 
