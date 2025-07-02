@@ -24,7 +24,7 @@ int main(int argc, char **argv)
     float excitation_amplitude_Volts = 0.19;
     float Larmor_frequency_Hertz = 24351298.957;
     int excitation_burst_cycles_tot = Larmor_frequency_Hertz *excitation_duration_seconds;
-    float oscillator_frequency = Larmor_frequency_Hertz + 1000;
+    float oscillator_frequency = Larmor_frequency_Hertz;
     float oscillator_amplitude_Volts = 0.8;
 
     int number_of_files = 1;
