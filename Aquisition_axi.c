@@ -100,10 +100,7 @@ int main(int argc, char **argv)
             fprintf(stderr, "rp_GenReset failed!\n");
             return -1;
         }
-        if(rp_GenSynchronise() != RP_OK){
-            fprintf(stderr, "rp_GenSynchronise failed!\n");
-            return -1;
-        }
+        
         if(rp_GenWaveform(RP_CH_1, RP_WAVEFORM_SINE) != RP_OK){
             fprintf(stderr, "rp_GenWaveform RP_CH_1 SINE failed!\n");
             return -1;
