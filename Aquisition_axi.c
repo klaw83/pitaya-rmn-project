@@ -162,21 +162,21 @@ int main(int argc, char **argv)
             fprintf(stderr, "rp_GenOutEnable RP_CH_1 failed!\n");
             return -1;
         }
-        if( rp_GenTriggerOnly(RP_CH_2) != RP_OK){ //Déclencgement de l'oscilateur local
-            fprintf(stderr, "rp_GenTriggerOnly Both failed!\n");
-            return -1;
-        }
         // DECLENCGEMENT DE L'AQUISITION AVANT LE BURST
         if( rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW) != RP_OK){
             fprintf(stderr, "rp_AcqSetTriggerSrc RP_TRIG_SRC_NOW failed!\n");
             return -1;
         }
         usleep(2000); //prec value excitation_duration_microseconds
-        if( rp_GenTriggerOnly(RP_CH_1) != RP_OK){ // Déclenchement de l'excitation
+        if( rp_GenTriggerOnlyBoth() != RP_OK){ //Déclencgement de l'oscilateur local
+            fprintf(stderr, "rp_GenTriggerOnlyBoth failed!\n");
+            return -1;
+        }
+        /* if( rp_GenTriggerOnly(RP_CH_1) != RP_OK){ // Déclenchement de l'excitation
             fprintf(stderr, "rp_GenTriggerOnly Both failed!\n");
             return -1;
         }
-        
+         */
         rp_acq_trig_state_t state = RP_TRIG_STATE_TRIGGERED;
         while(1){
             rp_AcqGetTriggerState(&state);
