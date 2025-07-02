@@ -7,7 +7,7 @@ int main (int argc, char **argv) {
     int unsigned led = RP_LED0;
 
     float excitation_duration_microseconds = 41.027;
-    float excitation_amplitude_Volts = 0.1;
+    float excitation_amplitude_Volts = 0.05;
     float answer_amplitude_Volts = 0.5;
     float Larmor_frequency_Hertz = 24378040.422;
     int duration_burst_second = 1;
