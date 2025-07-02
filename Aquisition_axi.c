@@ -100,6 +100,10 @@ int main(int argc, char **argv)
             fprintf(stderr, "rp_GenReset failed!\n");
             return -1;
         }
+        if(rp_GenSynchronise() != RP_OK){
+            fprintf(stderr, "rp_GenSynchronise failed!\n");
+            return -1;
+        }        
         if(rp_GenWaveform(RP_CH_1, RP_WAVEFORM_SINE) != RP_OK){
             fprintf(stderr, "rp_GenWaveform RP_CH_1 SINE failed!\n");
             return -1;
@@ -137,7 +141,7 @@ int main(int argc, char **argv)
             return -1;
         }
     
-    //INITIALISATION ET LANCEMENT SINE 1000HZ
+    //INITIALISATION ET LANCEMENT DE L'OSCILLATEUR LOCAL
         if(rp_GenWaveform(RP_CH_2, RP_WAVEFORM_SINE) != RP_OK){
             fprintf(stderr, "rp_GenWaveform RP_CH_1 SINE failed!\n");
             return -1;
@@ -158,16 +162,17 @@ int main(int argc, char **argv)
             fprintf(stderr, "rp_GenOutEnable RP_CH_1 failed!\n");
             return -1;
         }
-        if( rp_GenTriggerOnly(RP_CH_2) != RP_OK){
+        if( rp_GenTriggerOnly(RP_CH_2) != RP_OK){ //Déclencgement de l'oscilateur local
             fprintf(stderr, "rp_GenTriggerOnly Both failed!\n");
             return -1;
         }
+        // DECLENCGEMENT DE L'AQUISITION AVANT LE BURST
         if( rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW) != RP_OK){
             fprintf(stderr, "rp_AcqSetTriggerSrc RP_TRIG_SRC_NOW failed!\n");
             return -1;
         }
         usleep(2000); //prec value excitation_duration_microseconds
-        if( rp_GenTriggerOnly(RP_CH_1) != RP_OK){
+        if( rp_GenTriggerOnly(RP_CH_1) != RP_OK){ // Déclenchement de l'excitation
             fprintf(stderr, "rp_GenTriggerOnly Both failed!\n");
             return -1;
         }
