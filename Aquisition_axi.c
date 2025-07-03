@@ -35,8 +35,6 @@ int main(int argc, char **argv)
         dsize = atoi(argv[1]);
         dec = atoi(argv[2]);
         number_of_files = atoi(argv[3]);
-        Larmor_frequency_Hertz = atoi(argv[4]);
-        excitation_duration_seconds = atoi(argv[5]);
 
     }
 
