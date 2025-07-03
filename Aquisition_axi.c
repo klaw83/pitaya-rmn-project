@@ -19,10 +19,10 @@ int main(int argc, char **argv)
     uint32_t posChA;
     bool fillState = false;
     
-    float excitation_duration_seconds = 45.493e-06; //41.027e-06
+    float excitation_duration_seconds = 45.101e-06; //41.027e-06
     float excitation_duration_microseconds = excitation_duration_seconds*1000000;
     float excitation_amplitude_Volts = 0.19;
-    float Larmor_frequency_Hertz = 24351298.957;
+    float Larmor_frequency_Hertz = 24351392.574;
     int excitation_burst_cycles_tot = Larmor_frequency_Hertz *excitation_duration_seconds;
     float oscillator_frequency = Larmor_frequency_Hertz + 1000;
     float oscillator_amplitude_Volts = 0.8;
@@ -35,6 +35,9 @@ int main(int argc, char **argv)
         dsize = atoi(argv[1]);
         dec = atoi(argv[2]);
         number_of_files = atoi(argv[3]);
+        Larmor_frequency_Hertz = atoi(argv[4]);
+        excitation_duration_seconds = atoi(argv[5]);
+
     }
 
     if (rp_InitReset(false) != RP_OK) {
