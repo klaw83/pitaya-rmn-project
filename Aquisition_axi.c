@@ -162,7 +162,7 @@ int main(int argc, char **argv)
             return -1;
         }
         // DECLENCGEMENT DE L'AQUISITION AVANT LE BURST
-        if( rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW) != RP_OK){
+        if( rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW) != RP_OK){ //Possible de mettre RP_TRIG_SRC_CHD_PE pour déclencher aqu sur le front montant de l'excitation
             fprintf(stderr, "rp_AcqSetTriggerSrc RP_TRIG_SRC_NOW failed!\n");
             return -1;
         }
