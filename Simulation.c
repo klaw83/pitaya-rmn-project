@@ -28,8 +28,8 @@ int main (int argc, char **argv) {
     if (rp_Init() != RP_OK) {
         fprintf(stderr, "Red Pitaya API init failed!\n");
         return EXIT_FAILURE;
-    
-   }	
+   }
+
  	rp_GenReset();
 	rp_GenWaveform(RP_CH_1, RP_WAVEFORM_SINE);
 	rp_GenFreq(RP_CH_1, precession_frequency_shifted);
@@ -40,7 +40,7 @@ int main (int argc, char **argv) {
 	rp_GenBurstRepetitions(RP_CH_1, 1);  //Répété 1000 fois pour que le burst dure qq secondes
 	rp_GenBurstPeriod(RP_CH_1, 1);          //une micro seconde entre chaque répétition
 		
-        rp_GenOutEnable(RP_CH_1);
+    rp_GenOutEnable(RP_CH_1);
 
 
     while(1){
@@ -53,7 +53,7 @@ int main (int argc, char **argv) {
             fprintf(stderr, "rp_AcqStart failed!\n");
             return -1;
         }
-	rp_AcqSetTriggerSrc(RP_TRIG_SRC_CHA_PE);
+	    rp_AcqSetTriggerSrc(RP_TRIG_SRC_CHA_PE);
         rp_AcqSetTriggerLevel(RP_T_CH_1, excitation_amplitude_Volts);
 
 
@@ -77,7 +77,7 @@ int main (int argc, char **argv) {
         rp_DpinSetState(led, RP_LOW);
         rp_DpinSetState(led+1, RP_LOW);
         //sleep(3);
-}
+    }
     // Releasing resources
     rp_Release();
 
