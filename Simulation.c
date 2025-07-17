@@ -73,7 +73,7 @@ int main (int argc, char **argv) {
 
         rp_DpinSetState(led, RP_LOW);
         rp_DpinSetState(led+1, RP_LOW);
-        sleep(3);
+        //sleep(3);
 }
     // Releasing resources
     rp_Release();
