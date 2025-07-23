@@ -199,14 +199,14 @@ int main(int argc, char **argv)
             fprintf(stderr, "rp_GenSynchronise failed!\n");
             return -1;
         }
-        while(1){
+/*         while(1){
             rp_AcqGetTriggerState(&state);
             if(state == RP_TRIG_STATE_TRIGGERED){
-                usleep(5);
+                //usleep(5);
                 break;
             }
         }
-
+ */
         printf ("wait to be filled\n");
         while (!fillState) {
             if (rp_AcqAxiGetBufferFillState(RP_CH_2, &fillState) != RP_OK) {
@@ -219,10 +219,11 @@ int main(int argc, char **argv)
                 fprintf(stderr, "rp_AcqStop failed!\n");
                 return -1;
         }
-        
+
         rp_AcqAxiGetWritePointerAtTrig(RP_CH_2,&posChA);
         fprintf(stderr,"Tr pos1: 0x%X\n",posChA);
-        
+
+
         if(rp_AcqAxiGetDataV(RP_CH_2, posChA, &size1, buff1)!=RP_OK){
             fprintf(stderr, "rp_AcqAxiGetDataV failed\n");
         }
