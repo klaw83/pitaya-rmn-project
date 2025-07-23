@@ -10,6 +10,7 @@
 #define DATA_SIZE 524288
 #define SAMPLE_RATE 125000000
 
+
 int main(int argc, char **argv)
 {
     int dsize = DATA_SIZE;
@@ -34,11 +35,11 @@ int main(int argc, char **argv)
     rp_acq_trig_state_t state;
     uint32_t g_adc_axi_start,g_adc_axi_size;
 
-    if (argc >= 4){
+    if (argc >= 5){
         dsize = atoi(argv[1]);
         dec = atoi(argv[2]);
         number_of_files = atoi(argv[3]);
-
+        strcpy(nomFichier, argv[4]);
     }
 
     if (rp_InitReset(false) != RP_OK) {
@@ -65,7 +66,7 @@ int main(int argc, char **argv)
     fprintf(stderr, "rp_AcqAxiSetBuffer RP_CH_2 failed!\n");
     return -1;
     }
-    
+
     if ( rp_AcqSetGain(RP_CH_2,RP_HIGH) != RP_OK){
         fprintf(stderr, "rp_AcqSetGain CH1 Failed\n");
         return -1;
@@ -138,23 +139,35 @@ int main(int argc, char **argv)
         fprintf(stderr, "rp_GenOutEnable RP_CH_1 failed!\n");
         return -1;
     }
-    
-    //BOUCLE DE FICHIERS
+
+
+    /////// Creation du ficher //////
+    //Entête du fichier:
+    //      dsize
+    //      decimation
+    //      number of files
+    //      data 1
+    //      data 2
+    //      ...
+
+    FILE *fichier = fopen(nomFichier, "w");
+    printf("fichier crée : ");
+    puts(nomFichier);
+    if (fichier == NULL) {
+        perror("Erreur lors de l'ouverture du fichier\n");
+        return EXIT_FAILURE; // Quitter le programme avec un code d'erreur
+    }   
+
+    fprintf(fichier, "%d\n", dsize );
+    fprintf(fichier, "%d\n", dec );
+    fprintf(fichier, "%d\n", number_of_files);
+
+    //////////////////////////////////////
+    //////////BOUCLE DE FICHIERS//////////
+
     int i=0;
     for (i=0;i<number_of_files;i++){
         
-        sprintf(nomFichier,"mesures/data_%d.csv",i);
-        //strcat(nomFichier, numFichier);
-        puts(nomFichier);
-        /* Creation du ficher pour recolter les resultats*/
-        FILE *fichier = fopen(nomFichier, "w");
-        //printf("fichier crée\n");
-
-        if (fichier == NULL) {
-            perror("Erreur lors de l'ouverture du fichier\n");
-            return EXIT_FAILURE; // Quitter le programme avec un code d'erreur
-        }
-
         //LANCEMENT DE L'AQUISITION
         if (rp_AcqStart() != RP_OK) {
         fprintf(stderr, "rp_AcqStart failed!\n");
@@ -166,7 +179,8 @@ int main(int argc, char **argv)
             fprintf(stderr, "rp_AcqSetTriggerSrc RP_TRIG_SRC_NOW failed!\n");
             return -1;
         }
-        usleep(200); //prec value excitation_duration_microseconds
+        //usleep(2); //prec value excitation_duration_microseconds
+
 
         ////////////Declenchement non syncronisé : ///////////////
         /*if( rp_GenTriggerOnly() != RP_OK){ //Déclencgement de l'oscilateur local
@@ -188,16 +202,15 @@ int main(int argc, char **argv)
         while(1){
             rp_AcqGetTriggerState(&state);
             if(state == RP_TRIG_STATE_TRIGGERED){
-                sleep(1);
+                usleep(5);
                 break;
             }
         }
-    
 
         printf ("wait to be filled\n");
         while (!fillState) {
             if (rp_AcqAxiGetBufferFillState(RP_CH_2, &fillState) != RP_OK) {
-                fprintf(stderr, "rp_AcqAxiGetBufferFillState RP_CH_1 failed!\n");
+                fprintf(stderr, "rp_AcqAxiGetBufferFillState RP_CH_2 failed!\n");
                 return -1;
             }
         }
@@ -205,7 +218,7 @@ int main(int argc, char **argv)
         if(  rp_AcqStop() != RP_OK){
                 fprintf(stderr, "rp_AcqStop failed!\n");
                 return -1;
-            }
+        }
         
         rp_AcqAxiGetWritePointerAtTrig(RP_CH_2,&posChA);
         fprintf(stderr,"Tr pos1: 0x%X\n",posChA);
@@ -214,8 +227,9 @@ int main(int argc, char **argv)
             fprintf(stderr, "rp_AcqAxiGetDataV failed\n");
         }
         
-    
-        printf("ecriture dans %s\n",nomFichier);
+
+        //////  Ecriture des données dans le fichier    //////
+        printf("ecriture FID %d\n",i);
         for (int i = 0; i < dsize; i++) {
             // printf("[%d]\t%f\n",i,buff1[i]);
             fprintf(fichier, "%f", buff1[i]);
@@ -223,19 +237,11 @@ int main(int argc, char **argv)
         }
         fprintf(fichier, "\n");
 
-        for (int i = 0; i < dsize; i++) {
-            float time = (float)i/(float)SAMPLE_RATE*dec;
-        fprintf(fichier, "%f", time);
-            if (i!= dsize -1) fprintf(fichier, ",");
-        }
-
-        fprintf(fichier, "\n");
-        fclose(fichier);
-
-
         //sleep(delayRepeat);
 
     }
+    
+    fclose(fichier);
 
     /* Releasing resources */
     rp_AcqAxiEnable(RP_CH_2, false);
