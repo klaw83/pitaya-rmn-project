@@ -16,7 +16,7 @@ endif
 
 PRGS =  sin\
 	Burst\
-	Aquisition_axi\
+	Acquisition_axi\
 	digital_led_blink\
 	Simulation\
 	SimulationV1\
