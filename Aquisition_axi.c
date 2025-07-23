@@ -31,6 +31,9 @@ int main(int argc, char **argv)
     int number_of_files = 1;
     char nomFichier[256];
 
+    rp_acq_trig_state_t state;
+    uint32_t g_adc_axi_start,g_adc_axi_size;
+
     if (argc >= 4){
         dsize = atoi(argv[1]);
         dec = atoi(argv[2]);
@@ -41,9 +44,102 @@ int main(int argc, char **argv)
     if (rp_InitReset(false) != RP_OK) {
             fprintf(stderr, "Rp api init failed!\n");
             return -1;
-        }
+    }
+    //INITIALISATION AQUISITION 
+    if(rp_AcqReset()!=RP_OK){
+        fprintf(stderr, "rp_AcqReset failed!\n");
+        return -1;
+    }
+    if (rp_AcqAxiSetDecimationFactor(dec) != RP_OK) {
+        fprintf(stderr, "rp_AcqAxiSetDecimationFactor failed!\n");
+        return -1;
+    }
+    if (rp_AcqAxiSetTriggerDelay(RP_CH_2, 0)  != RP_OK) { 
+        fprintf(stderr, "rp_AcqAxiSetTriggerDelay RP_CH_2 failed!\n");
+        return -1;
+    }
 
+    rp_AcqAxiGetMemoryRegion(&g_adc_axi_start,&g_adc_axi_size);
+    //printf("Reserved memory start 0x%X size 0x%X bytes\n",g_adc_axi_start,g_adc_axi_size);
+    if (rp_AcqAxiSetBufferSamples(RP_CH_2,g_adc_axi_start, dsize) != RP_OK) {
+    fprintf(stderr, "rp_AcqAxiSetBuffer RP_CH_2 failed!\n");
+    return -1;
+    }
     
+    if ( rp_AcqSetGain(RP_CH_2,RP_HIGH) != RP_OK){
+        fprintf(stderr, "rp_AcqSetGain CH1 Failed\n");
+        return -1;
+    }
+    if (rp_AcqAxiEnable(RP_CH_2, true)) {
+        fprintf(stderr, "rp_AcqAxiEnable RP_CH_2 failed!\n");
+        return -1;
+    }
+
+     //INITIALISATION GENERATION BURST
+    if(rp_GenReset() != RP_OK){
+            fprintf(stderr, "rp_GenReset failed!\n");
+            return -1;
+        } 
+    if(rp_GenWaveform(RP_CH_1, RP_WAVEFORM_SINE) != RP_OK){
+        fprintf(stderr, "rp_GenWaveform RP_CH_1 SINE failed!\n");
+        return -1;
+    }
+    if(rp_GenFreq(RP_CH_1, Larmor_frequency_Hertz) != RP_OK){
+        fprintf(stderr, "rp_GenFreq RP_CH_1 failed!\n");
+        return -1;
+    }
+    if(rp_GenAmp(RP_CH_1, excitation_amplitude_Volts) != RP_OK){
+        fprintf(stderr, "rp_GenAmp RP_CH_1 failed!\n");
+        return -1;
+    }
+    if(rp_GenMode(RP_CH_1, RP_GEN_MODE_BURST) != RP_OK){
+        fprintf(stderr, "rp_GenMode RP_CH_1 BURST failed!\n");
+        return -1;
+    }
+    
+    if(rp_GenBurstCount(RP_CH_1, excitation_burst_cycles_tot) != RP_OK){
+        fprintf(stderr, "rp_GenBurstCount RP_CH_1 failed!\n");
+        return -1;
+    }
+    //valeur max pour GenBurstCount = 50 000
+    if(rp_GenBurstRepetitions(RP_CH_1, 1) != RP_OK){
+        fprintf(stderr, "rp_GenBurstRepetitions RP_CH_1 failed!\n");
+        return -1;
+    }//Répété 1 fois pour que le burst dure qq usecondes
+    
+    if(rp_GenBurstPeriod(RP_CH_1, 1) != RP_OK){
+        fprintf(stderr, "rp_GenBurstPeriod RP_CH_1 failed!\n");
+        return -1;
+    }//une micro seconde entre chaque répétition
+    
+    if( rp_GenOutEnable(RP_CH_1) != RP_OK){
+        fprintf(stderr, "rp_GenOutEnable RP_CH_1 failed!\n");
+        return -1;
+    }
+
+    //INITIALISATION ET LANCEMENT DE L'OSCILLATEUR LOCAL
+    if(rp_GenWaveform(RP_CH_2, RP_WAVEFORM_SINE) != RP_OK){
+        fprintf(stderr, "rp_GenWaveform RP_CH_1 SINE failed!\n");
+        return -1;
+    }
+    if(rp_GenFreq(RP_CH_2, oscillator_frequency) != RP_OK){
+        fprintf(stderr, "rp_GenFreq RP_CH_1 failed!\n");
+        return -1;
+    }
+    if(rp_GenAmp(RP_CH_2, oscillator_amplitude_Volts) != RP_OK){
+        fprintf(stderr, "rp_GenAmp RP_CH_1 failed!\n");
+        return -1;
+    }
+    if(rp_GenMode(RP_CH_2, RP_GEN_MODE_CONTINUOUS) != RP_OK){
+        fprintf(stderr, "rp_GenMode RP_CH_1 BURST failed!\n");
+        return -1;
+    }
+    if( rp_GenOutEnable(RP_CH_2) != RP_OK){
+        fprintf(stderr, "rp_GenOutEnable RP_CH_1 failed!\n");
+        return -1;
+    }
+    
+    //BOUCLE DE FICHIERS
     int i=0;
     for (i=0;i<number_of_files;i++){
         
@@ -59,118 +155,20 @@ int main(int argc, char **argv)
             return EXIT_FAILURE; // Quitter le programme avec un code d'erreur
         }
 
-
-        //Initialisation
-        rp_AcqResetFpga();
-        uint32_t g_adc_axi_start,g_adc_axi_size;
-        rp_AcqAxiGetMemoryRegion(&g_adc_axi_start,&g_adc_axi_size);
-        //printf("Reserved memory start 0x%X size 0x%X bytes\n",g_adc_axi_start,g_adc_axi_size);
-        
-        //INITIALISATION AQUISITION 
-        if(rp_AcqReset()!=RP_OK){
-            fprintf(stderr, "rp_AcqReset failed!\n");
-            return -1;
-        }
-        if (rp_AcqAxiSetDecimationFactor(dec) != RP_OK) {
-            fprintf(stderr, "rp_AcqAxiSetDecimationFactor failed!\n");
-            return -1;
-        }
-        if (rp_AcqAxiSetTriggerDelay(RP_CH_2, 0)  != RP_OK) { 
-            fprintf(stderr, "rp_AcqAxiSetTriggerDelay RP_CH_2 failed!\n");
-            return -1;
-        }
-        if (rp_AcqAxiSetBufferSamples(RP_CH_2,g_adc_axi_start, dsize) != RP_OK) {
-            fprintf(stderr, "rp_AcqAxiSetBuffer RP_CH_2 failed!\n");
-            return -1;
-        }
-        if ( rp_AcqSetGain(RP_CH_2,RP_HIGH) != RP_OK){
-            fprintf(stderr, "rp_AcqSetGain CH1 Failed\n");
-            return -1;
-        }
-        if (rp_AcqAxiEnable(RP_CH_2, true)) {
-            fprintf(stderr, "rp_AcqAxiEnable RP_CH_2 failed!\n");
-            return -1;
-        }
-    //LANCEMENT DE L'AQUISITION
+        //LANCEMENT DE L'AQUISITION
         if (rp_AcqStart() != RP_OK) {
         fprintf(stderr, "rp_AcqStart failed!\n");
         return -1;
         }
         
-    //INITIALISATION GENERATION BURST
-        if(rp_GenReset() != RP_OK){
-            fprintf(stderr, "rp_GenReset failed!\n");
-            return -1;
-        }
-        
-        if(rp_GenWaveform(RP_CH_1, RP_WAVEFORM_SINE) != RP_OK){
-            fprintf(stderr, "rp_GenWaveform RP_CH_1 SINE failed!\n");
-            return -1;
-        }
-        if(rp_GenFreq(RP_CH_1, Larmor_frequency_Hertz) != RP_OK){
-            fprintf(stderr, "rp_GenFreq RP_CH_1 failed!\n");
-            return -1;
-        }
-        if(rp_GenAmp(RP_CH_1, excitation_amplitude_Volts) != RP_OK){
-            fprintf(stderr, "rp_GenAmp RP_CH_1 failed!\n");
-            return -1;
-        }
-        if(rp_GenMode(RP_CH_1, RP_GEN_MODE_BURST) != RP_OK){
-            fprintf(stderr, "rp_GenMode RP_CH_1 BURST failed!\n");
-            return -1;
-        }
-        
-        if(rp_GenBurstCount(RP_CH_1, excitation_burst_cycles_tot) != RP_OK){
-            fprintf(stderr, "rp_GenBurstCount RP_CH_1 failed!\n");
-            return -1;
-        }
-        //valeur max pour GenBurstCount = 50 000
-        if(rp_GenBurstRepetitions(RP_CH_1, 1) != RP_OK){
-            fprintf(stderr, "rp_GenBurstRepetitions RP_CH_1 failed!\n");
-            return -1;
-        }//Répété 1 fois pour que le burst dure qq usecondes
-        
-        if(rp_GenBurstPeriod(RP_CH_1, 1) != RP_OK){
-            fprintf(stderr, "rp_GenBurstPeriod RP_CH_1 failed!\n");
-            return -1;
-        }//une micro seconde entre chaque répétition
-        
-        if( rp_GenOutEnable(RP_CH_1) != RP_OK){
-            fprintf(stderr, "rp_GenOutEnable RP_CH_1 failed!\n");
-            return -1;
-        }
-    
-    //INITIALISATION ET LANCEMENT DE L'OSCILLATEUR LOCAL
-        if(rp_GenWaveform(RP_CH_2, RP_WAVEFORM_SINE) != RP_OK){
-            fprintf(stderr, "rp_GenWaveform RP_CH_1 SINE failed!\n");
-            return -1;
-        }
-        if(rp_GenFreq(RP_CH_2, oscillator_frequency) != RP_OK){
-            fprintf(stderr, "rp_GenFreq RP_CH_1 failed!\n");
-            return -1;
-        }
-        if(rp_GenAmp(RP_CH_2, oscillator_amplitude_Volts) != RP_OK){
-            fprintf(stderr, "rp_GenAmp RP_CH_1 failed!\n");
-            return -1;
-        }
-        if(rp_GenMode(RP_CH_2, RP_GEN_MODE_CONTINUOUS) != RP_OK){
-            fprintf(stderr, "rp_GenMode RP_CH_1 BURST failed!\n");
-            return -1;
-        }
-        if( rp_GenOutEnable(RP_CH_2) != RP_OK){
-            fprintf(stderr, "rp_GenOutEnable RP_CH_1 failed!\n");
-            return -1;
-        }
         // DECLENCGEMENT DE L'AQUISITION AVANT LE BURST
         if( rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW) != RP_OK){ //Possible de mettre RP_TRIG_SRC_CHD_PE pour déclencher aqu sur le front montant de l'excitation
             fprintf(stderr, "rp_AcqSetTriggerSrc RP_TRIG_SRC_NOW failed!\n");
             return -1;
         }
-        usleep(2000); //prec value excitation_duration_microseconds
-        if(rp_GenSynchronise() != RP_OK){
-            fprintf(stderr, "rp_GenSynchronise failed!\n");
-            return -1;
-        }        
+        usleep(200); //prec value excitation_duration_microseconds
+
+        ////////////Declenchement non syncronisé : ///////////////
         /*if( rp_GenTriggerOnly() != RP_OK){ //Déclencgement de l'oscilateur local
             fprintf(stderr, "rp_GenTriggerOnlyBoth failed!\n");
             return -1;
@@ -179,8 +177,14 @@ int main(int argc, char **argv)
             fprintf(stderr, "rp_GenTriggerOnly Both failed!\n");
             return -1;
         }
-         */
-        rp_acq_trig_state_t state = RP_TRIG_STATE_TRIGGERED;
+        */
+
+
+       ////////////Declenchement syncronisé:///////////////
+        if(rp_GenSynchronise() != RP_OK){
+            fprintf(stderr, "rp_GenSynchronise failed!\n");
+            return -1;
+        }
         while(1){
             rp_AcqGetTriggerState(&state);
             if(state == RP_TRIG_STATE_TRIGGERED){
@@ -189,7 +193,7 @@ int main(int argc, char **argv)
             }
         }
     
-        
+
         printf ("wait to be filled\n");
         while (!fillState) {
             if (rp_AcqAxiGetBufferFillState(RP_CH_2, &fillState) != RP_OK) {
@@ -227,9 +231,11 @@ int main(int argc, char **argv)
 
         fprintf(fichier, "\n");
         fclose(fichier);
-        sleep(delayRepeat);
 
-}
+
+        //sleep(delayRepeat);
+
+    }
 
     /* Releasing resources */
     rp_AcqAxiEnable(RP_CH_2, false);
