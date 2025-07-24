@@ -17,9 +17,7 @@ int main(int argc, char **argv)
     int dsize = DATA_SIZE;
     uint32_t dec =1; 
     uint32_t size1 = dsize;
-    int16_t *buff1 = (int16_t *)malloc(dsize * sizeof(float));
-    uint32_t posChA;
-    bool fillState = false;
+    
     
     float excitation_duration_seconds = 45.101e-06; //41.027e-06
     float excitation_duration_microseconds = excitation_duration_seconds*1000000;
@@ -63,12 +61,13 @@ int main(int argc, char **argv)
 
     rp_AcqAxiGetMemoryRegion(&g_adc_axi_start,&g_adc_axi_size);
     //printf("Reserved memory start 0x%X size 0x%X bytes\n",g_adc_axi_start,g_adc_axi_size);
+
     if (rp_AcqAxiSetBufferSamples(RP_CH_2,g_adc_axi_start, dsize) != RP_OK) {
     fprintf(stderr, "rp_AcqAxiSetBuffer RP_CH_2 failed!\n");
     return -1;
     }
 
-    if ( rp_AcqSetGain(RP_CH_2,RP_HIGH) != RP_OK){
+    if (rp_AcqSetGain(RP_CH_2,RP_HIGH) != RP_OK){
         fprintf(stderr, "rp_AcqSetGain CH1 Failed\n");
         return -1;
     }
@@ -81,7 +80,7 @@ int main(int argc, char **argv)
     if(rp_GenReset() != RP_OK){
             fprintf(stderr, "rp_GenReset failed!\n");
             return -1;
-        } 
+    } 
     if(rp_GenWaveform(RP_CH_1, RP_WAVEFORM_SINE) != RP_OK){
         fprintf(stderr, "rp_GenWaveform RP_CH_1 SINE failed!\n");
         return -1;
@@ -225,7 +224,7 @@ int main(int argc, char **argv)
         fprintf(stderr,"Tr pos1: 0x%X\n",posChA);
 
 
-        if(rp_AcqAxiGetDataRaw(RP_CH_2, posChA, &size1, buff1)!=RP_OK){
+        if(rp_AcqAxiGetDataRaw(RP_CH_2, posChA, &dsize, buff1)!=RP_OK){
             fprintf(stderr, "rp_AcqAxiGetDataV failed\n");
         }
         
@@ -234,7 +233,7 @@ int main(int argc, char **argv)
         printf("ecriture FID %d\n",i);
         for (int i = 0; i < dsize; i++) {
             // printf("[%d]\t%f\n",i,buff1[i]);
-            fprintf(fichier, "%f", buff1[i]);
+            fprintf(fichier, "%d", buff1[i]);
             if (i!= dsize -1) fprintf(fichier, ",");
         }
         fprintf(fichier, "\n");
