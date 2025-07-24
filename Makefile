@@ -27,7 +27,7 @@ SRC := $(patsubst %,%.c,$(PRGS))
 all: $(PRGS)
 
 $(PRGS): %: %.c
-	$(CC) $< $(CFLAGS) $(LDFLAGS) $(LDLIBS) -o $@
+	$(CC) $< $(CFLAGS) $(LDFLAGS) $(LDLIBS) -o $@.exe
 
 clean:
 	$(RM) *.o
