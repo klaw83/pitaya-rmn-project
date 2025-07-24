@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <time.h>
 #include "rp.h"
 
 #define DATA_SIZE 524288
@@ -16,7 +17,7 @@ int main(int argc, char **argv)
     int dsize = DATA_SIZE;
     uint32_t dec =1; 
     uint32_t size1 = dsize;
-    float *buff1 = (float *)malloc(dsize * sizeof(float));
+    int16_t *buff1 = (int16_t *)malloc(dsize * sizeof(float));
     uint32_t posChA;
     bool fillState = false;
     
@@ -164,7 +165,7 @@ int main(int argc, char **argv)
 
     //////////////////////////////////////
     //////////BOUCLE DE FICHIERS//////////
-
+    clock_t begin = clock();
     int i=0;
     for (i=0;i<number_of_files;i++){
         
@@ -224,7 +225,7 @@ int main(int argc, char **argv)
         fprintf(stderr,"Tr pos1: 0x%X\n",posChA);
 
 
-        if(rp_AcqAxiGetDataV(RP_CH_2, posChA, &size1, buff1)!=RP_OK){
+        if(rp_AcqAxiGetDataRaw(RP_CH_2, posChA, &size1, buff1)!=RP_OK){
             fprintf(stderr, "rp_AcqAxiGetDataV failed\n");
         }
         
@@ -241,7 +242,11 @@ int main(int argc, char **argv)
         //sleep(delayRepeat);
 
     }
-    
+    clock_t end = clock();
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+
+    printf("Temps d'execution : %lf\n",time_spent);
+
     fclose(fichier);
 
     /* Releasing resources */
