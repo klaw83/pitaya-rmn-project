@@ -40,6 +40,10 @@ int main(int argc, char **argv)
         number_of_files = atoi(argv[3]);
         strcpy(nomFichier, argv[4]);
     }
+    int16_t *buff1 = (int16_t *)malloc(dsize * sizeof(float));
+    uint32_t posChA;
+    bool fillState = false;
+
 
     if (rp_InitReset(false) != RP_OK) {
             fprintf(stderr, "Rp api init failed!\n");
