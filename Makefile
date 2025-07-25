@@ -35,6 +35,7 @@ clean:
 
 clean_all: clean
 	$(RM) $(PRGS)
+	$(RM) *.exe
 
 debug:
 	$(MAKE) DEBUG=1
