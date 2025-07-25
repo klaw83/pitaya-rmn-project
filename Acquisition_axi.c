@@ -8,15 +8,56 @@
 #include <time.h>
 #include "rp.h"
 
-#define DATA_SIZE 524288
+#define DATA_SIZE_MAX 524288
 #define SAMPLE_RATE 125000000
 
+/**
+ * @brief Crée un fichier avec un en-tête contenant des informations d'acquisition.
+ *
+ * Le fichier contiendra les informations suivantes sur une première ligne :
+ *  dsize, decimation, nombre de fichiers, gain, offset, nombre de bits.
+ *
+ * @param fichier           Pointeur vers le fichier ouvert en écriture.
+ * @param dsize             Taille des données à enregistrer.
+ * @param dec               Facteur de décimation utilisé lors de l'acquisition.
+ * @param number_of_files   Nombre de fichiers à traiter/enregistrer.
+ *
+ * @return int              0 si succès, -1 si erreur lors de la récupération du gain.
+ *
+ * @note Le offset est actuellement fixé à 0 car la fonction rp_AcqAxiGetOffset n'est pas supportée.
+ * @note Le gain est récupéré via rp_AcqGetGainV sur le canal 2 (RP_CH_2).
+ */
+int create_file(FILE* fichier, int dsize, int dec, int number_of_files){   
+
+    float gainValue; //1 ou 20V
+    
+    float offset = 0;
+    int nb_bits = 14; 
+    rp_channel_t channel = RP_CH_2;
+
+    // Fonction ne marche pas rp_AcqAxigetOffset non comprise par la RedPitaya lors de la compilation
+    // if (rp_AcqAxiGetOffset(channel, &offset) != RP_OK){
+    //     return -1;
+    // }
+
+    if (rp_AcqGetGainV(channel, &gainValue) != RP_OK){
+        return -1;
+    }
+
+    fprintf(fichier, "%d, ", dsize );
+    fprintf(fichier, "%d, ", dec );
+    fprintf(fichier, "%d, ", number_of_files);
+    fprintf(fichier, "%f, ",(float) gainValue);
+    fprintf(fichier, "%f, ", offset);
+    fprintf(fichier, "%d\n", nb_bits);
+
+    return 0;
+}
 
 int main(int argc, char **argv)
 {
-    int dsize = DATA_SIZE;
+    uint32_t dsize = DATA_SIZE_MAX;
     uint32_t dec =1; 
-    uint32_t size1 = dsize;
     
     
     float excitation_duration_seconds = 45.101e-06; //41.027e-06
@@ -30,6 +71,7 @@ int main(int argc, char **argv)
     int delayRepeat = 5; //en secondes
     int number_of_files = 1;
     char nomFichier[256];
+    rp_pinState_t Gain = RP_HIGH;
 
     rp_acq_trig_state_t state;
     uint32_t g_adc_axi_start,g_adc_axi_size;
@@ -40,16 +82,18 @@ int main(int argc, char **argv)
         number_of_files = atoi(argv[3]);
         strcpy(nomFichier, argv[4]);
     }
-    int16_t *buff1 = (int16_t *)malloc(dsize * sizeof(float));
+
+    int16_t *buff1 = (int16_t *)malloc(dsize * sizeof(int16_t));
     uint32_t posChA;
     bool fillState = false;
-
+    
 
     if (rp_InitReset(false) != RP_OK) {
             fprintf(stderr, "Rp api init failed!\n");
             return -1;
     }
-    //INITIALISATION AQUISITION 
+
+    ///////// INITIALISATION AQUISITION ///////
     if(rp_AcqReset()!=RP_OK){
         fprintf(stderr, "rp_AcqReset failed!\n");
         return -1;
@@ -71,7 +115,7 @@ int main(int argc, char **argv)
     return -1;
     }
 
-    if (rp_AcqSetGain(RP_CH_2,RP_HIGH) != RP_OK){
+    if (rp_AcqSetGain(RP_CH_2, Gain) != RP_OK){
         fprintf(stderr, "rp_AcqSetGain CH1 Failed\n");
         return -1;
     }
@@ -80,7 +124,7 @@ int main(int argc, char **argv)
         return -1;
     }
 
-     //INITIALISATION GENERATION BURST
+    ////// INITIALISATION GENERATION BURST ///////
     if(rp_GenReset() != RP_OK){
             fprintf(stderr, "rp_GenReset failed!\n");
             return -1;
@@ -143,28 +187,20 @@ int main(int argc, char **argv)
         fprintf(stderr, "rp_GenOutEnable RP_CH_1 failed!\n");
         return -1;
     }
-
-
-    /////// Creation du ficher //////
-    //Entête du fichier:
-    //      dsize
-    //      decimation
-    //      number of files
-    //      data 1
-    //      data 2
-    //      ...
-
+  
     FILE *fichier = fopen(nomFichier, "w");
     printf("fichier crée : ");
     puts(nomFichier);
+
     if (fichier == NULL) {
         perror("Erreur lors de l'ouverture du fichier\n");
-        return EXIT_FAILURE; // Quitter le programme avec un code d'erreur
-    }   
+        return -1; // Quitte le programme avec erreur
+    }
 
-    fprintf(fichier, "%d\n", dsize );
-    fprintf(fichier, "%d\n", dec );
-    fprintf(fichier, "%d\n", number_of_files);
+    if (create_file(fichier, dsize, dec, number_of_files)){
+        perror("Erreur de creation fichier");
+        return -1;
+    }
 
     //////////////////////////////////////
     //////////BOUCLE DE FICHIERS//////////
