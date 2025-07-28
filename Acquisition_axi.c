@@ -83,7 +83,7 @@ int main(int argc, char **argv)
         strcpy(nomFichier, argv[4]);
     }
 
-    int16_t *buff1 = (int16_t *)malloc(dsize * sizeof(int16_t));
+    float *buff1 = (float *)malloc(dsize * sizeof(float));
     uint32_t posChA;
     bool fillState = false;
     
@@ -107,20 +107,8 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    rp_AcqAxiGetMemoryRegion(&g_adc_axi_start,&g_adc_axi_size);
-    //printf("Reserved memory start 0x%X size 0x%X bytes\n",g_adc_axi_start,g_adc_axi_size);
-
-    if (rp_AcqAxiSetBufferSamples(RP_CH_2,g_adc_axi_start, dsize) != RP_OK) {
-    fprintf(stderr, "rp_AcqAxiSetBuffer RP_CH_2 failed!\n");
-    return -1;
-    }
-
     if (rp_AcqSetGain(RP_CH_2, Gain) != RP_OK){
         fprintf(stderr, "rp_AcqSetGain CH1 Failed\n");
-        return -1;
-    }
-    if (rp_AcqAxiEnable(RP_CH_2, true)) {
-        fprintf(stderr, "rp_AcqAxiEnable RP_CH_2 failed!\n");
         return -1;
     }
 
@@ -207,7 +195,20 @@ int main(int argc, char **argv)
     clock_t begin = clock();
     int i=0;
     for (i=0;i<number_of_files;i++){
-        
+
+        rp_AcqAxiGetMemoryRegion(&g_adc_axi_start,&g_adc_axi_size);
+        //printf("Reserved memory start 0x%X size 0x%X bytes\n",g_adc_axi_start,g_adc_axi_size);
+
+        if (rp_AcqAxiSetBufferSamples(RP_CH_2,g_adc_axi_start, dsize) != RP_OK) {
+        fprintf(stderr, "rp_AcqAxiSetBuffer RP_CH_2 failed!\n");
+        return -1;
+        }
+        if (rp_AcqAxiEnable(RP_CH_2, true)) {
+            fprintf(stderr, "rp_AcqAxiEnable RP_CH_2 failed!\n");
+            return -1;
+        }
+
+    
         //LANCEMENT DE L'AQUISITION
         if (rp_AcqStart() != RP_OK) {
         fprintf(stderr, "rp_AcqStart failed!\n");
@@ -239,14 +240,14 @@ int main(int argc, char **argv)
             fprintf(stderr, "rp_GenSynchronise failed!\n");
             return -1;
         }
-/*         while(1){
+        while(1){
             rp_AcqGetTriggerState(&state);
             if(state == RP_TRIG_STATE_TRIGGERED){
                 //usleep(5);
                 break;
             }
         }
- */
+
         printf ("wait to be filled\n");
         while (!fillState) {
             if (rp_AcqAxiGetBufferFillState(RP_CH_2, &fillState) != RP_OK) {
@@ -263,8 +264,8 @@ int main(int argc, char **argv)
         rp_AcqAxiGetWritePointerAtTrig(RP_CH_2,&posChA);
         fprintf(stderr,"Tr pos1: 0x%X\n",posChA);
 
-
-        if(rp_AcqAxiGetDataRaw(RP_CH_2, posChA, &dsize, buff1)!=RP_OK){
+        
+        if(rp_AcqAxiGetDataV(RP_CH_2, posChA, &dsize, buff1)!=RP_OK){
             fprintf(stderr, "rp_AcqAxiGetDataV failed\n");
         }
         
@@ -272,8 +273,8 @@ int main(int argc, char **argv)
         //////  Ecriture des données dans le fichier    //////
         printf("ecriture FID %d\n",i);
         for (int i = 0; i < dsize; i++) {
-            // printf("[%d]\t%f\n",i,buff1[i]);
-            fprintf(fichier, "%d", buff1[i]);
+            printf("[%d]\t%f\n",i,buff1[i]);
+            fprintf(fichier, "%f", buff1[i]);
             if (i!= dsize -1) fprintf(fichier, ",");
         }
         fprintf(fichier, "\n");
