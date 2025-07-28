@@ -76,12 +76,26 @@ int main(int argc, char **argv)
     rp_acq_trig_state_t state;
     uint32_t g_adc_axi_start,g_adc_axi_size;
 
-    if (argc >= 5){
-        dsize = atoi(argv[1]);
-        dec = atoi(argv[2]);
-        number_of_files = atoi(argv[3]);
-        strcpy(nomFichier, argv[4]);
-    }
+    if (argc < 5) {
+    fprintf(stderr, "Erreur : nombre d'arguments insuffisant.\n");
+    fprintf(stderr, "Usage : %s <dsize> <dec> <number_of_files> <nomFichier>\n", argv[0]);
+    exit(EXIT_FAILURE);
+}
+
+dsize = atoi(argv[1]);
+dec = atoi(argv[2]);
+number_of_files = atoi(argv[3]);
+strcpy(nomFichier, argv[4]);
+
+// Vérification des valeurs numériques
+if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
+    fprintf(stderr, "Erreur : paramètres invalides.\n");
+    fprintf(stderr, "dsize = %d (doit être > 0)\n", dsize);
+    fprintf(stderr, "dec = %d (doit être >= 0)\n", dec);
+    fprintf(stderr, "number_of_files = %d (doit être > 0)\n", number_of_files);
+    exit(EXIT_FAILURE);
+}
+
 
     float *buff1 = (float *)malloc(dsize * sizeof(float));
     uint32_t posChA;
