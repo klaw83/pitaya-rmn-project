@@ -287,7 +287,7 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
         //////  Ecriture des données dans le fichier    //////
         printf("ecriture FID %d\n",i);
         for (int i = 0; i < dsize; i++) {
-            printf("[%d]\t%f\n",i,buff1[i]);
+            //printf("[%d]\t%f\n",i,buff1[i]);
             fprintf(fichier, "%f", buff1[i]);
             if (i!= dsize -1) fprintf(fichier, ",");
         }
