@@ -36,8 +36,8 @@ int main (int argc, char **argv) {
 	rp_GenAmp(RP_CH_1, 0.5);
 
 	rp_GenMode(RP_CH_1, RP_GEN_MODE_BURST);
-	rp_GenBurstCount(RP_CH_1, 5);         //valeur max pour GenBurstCount
-	rp_GenBurstRepetitions(RP_CH_1, 1);  //Répété 1000 fois pour que le burst dure qq secondes
+	rp_GenBurstCount(RP_CH_1, 5);           //5 periodes sinusoidales
+	rp_GenBurstRepetitions(RP_CH_1, 1);
 	rp_GenBurstPeriod(RP_CH_1, 1);          //une micro seconde entre chaque répétition
 		
     rp_GenOutEnable(RP_CH_1);
