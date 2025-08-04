@@ -270,7 +270,9 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
                 return -1;
         }
 
-        rp_AcqAxiGetWritePointerAtTrig(RP_CH_2,&posChA);
+        if(rp_AcqAxiGetWritePointerAtTrig(RP_CH_2,&posChA)=!RP_OK){
+            fprintf(stderr,"rp_AcqAxiGetWritePointerAtTrig Error");
+        }
         printf("Tr pos1: 0x%x\n",posChA);
 
         if(rp_AcqAxiGetDataV(RP_CH_2, posChA, &dsize, buff1)!=RP_OK){
