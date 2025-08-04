@@ -151,8 +151,7 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
     if(rp_GenBurstCount(RP_CH_1, excitation_burst_cycles_tot) != RP_OK){
         fprintf(stderr, "rp_GenBurstCount RP_CH_1 failed!\n");
         return -1;
-    }
-    //valeur max pour GenBurstCount = 50 000
+    }//valeur max pour GenBurstCount = 50 000
     if(rp_GenBurstRepetitions(RP_CH_1, 1) != RP_OK){
         fprintf(stderr, "rp_GenBurstRepetitions RP_CH_1 failed!\n");
         return -1;
@@ -190,15 +189,14 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
         return -1;
     }
   
+    ///Création du fichier
     FILE *fichier = fopen(nomFichier, "w");
     printf("fichier crée : ");
     puts(nomFichier);
-
     if (fichier == NULL) {
         perror("Erreur lors de l'ouverture du fichier\n");
         return -1; // Quitte le programme avec erreur
     }
-
     if (create_file(fichier, dsize, dec, number_of_files)){
         perror("Erreur de creation fichier");
         return -1;
@@ -222,19 +220,16 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
             return -1;
         }
 
-    
-        //LANCEMENT DE L'AQUISITION
+        //LANCEMENT, DECLENCGEMENT DE L'AQUISITION AVANT LE BURST
         if (rp_AcqStart() != RP_OK) {
         fprintf(stderr, "rp_AcqStart failed!\n");
         return -1;
         }
-        
-        // DECLENCGEMENT DE L'AQUISITION AVANT LE BURST
         if( rp_AcqSetTriggerSrc(RP_TRIG_SRC_NOW) != RP_OK){ //Possible de mettre RP_TRIG_SRC_CHD_PE pour déclencher aqu sur le front montant de l'excitation
             fprintf(stderr, "rp_AcqSetTriggerSrc RP_TRIG_SRC_NOW failed!\n");
             return -1;
         }
-        //usleep(2); //prec value excitation_duration_microseconds
+        usleep(40); //prec value excitation_duration_microseconds
 
 
         ////////////Declenchement non syncronisé : ///////////////
@@ -276,14 +271,12 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
         }
 
         rp_AcqAxiGetWritePointerAtTrig(RP_CH_2,&posChA);
-        fprintf(stderr,"Tr pos1: 0x%X\n",posChA);
+        printf("Tr pos1: 0x%x\n",posChA);
 
-        
         if(rp_AcqAxiGetDataV(RP_CH_2, posChA, &dsize, buff1)!=RP_OK){
             fprintf(stderr, "rp_AcqAxiGetDataV failed\n");
         }
         
-
         //////  Ecriture des données dans le fichier    //////
         printf("ecriture FID %d\n",i);
         for (int i = 0; i < dsize; i++) {
