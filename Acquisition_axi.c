@@ -76,25 +76,28 @@ int main(int argc, char **argv)
     rp_acq_trig_state_t state;
     uint32_t g_adc_axi_start,g_adc_axi_size;
 
-    if (argc < 5) {
+    if (argc < 7) {
     fprintf(stderr, "Erreur : nombre d'arguments insuffisant.\n");
-    fprintf(stderr, "Usage : %s <dsize> <dec> <number_of_files> <nomFichier>\n", argv[0]);
+    fprintf(stderr, "Usage : %s <dsize> <dec> <number_of_files> <nomFichier> <Frequency> <exitation duration>\n", argv[0]);
     exit(EXIT_FAILURE);
-}
+    }
 
-dsize = atoi(argv[1]);
-dec = atoi(argv[2]);
-number_of_files = atoi(argv[3]);
-strcpy(nomFichier, argv[4]);
+    dsize = atoi(argv[1]);
+    dec = atoi(argv[2]);
+    number_of_files = atoi(argv[3]);
+    strcpy(nomFichier, argv[4]);
+    Larmor_frequency_Hertz = atof(argv[5]);
+    excitation_duration_seconds = atof(argv[6]);
+    printf("larmor %f, duration excitation %f\n",Larmor_frequency_Hertz, excitation_duration_seconds);
 
-// Vérification des valeurs numériques
-if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
-    fprintf(stderr, "Erreur : paramètres invalides.\n");
-    fprintf(stderr, "dsize = %d (doit être > 0)\n", dsize);
-    fprintf(stderr, "dec = %d (doit être >= 0)\n", dec);
-    fprintf(stderr, "number_of_files = %d (doit être > 0)\n", number_of_files);
-    exit(EXIT_FAILURE);
-}
+    // Vérification des valeurs numériques
+    if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
+        fprintf(stderr, "Erreur : paramètres invalides.\n");
+        fprintf(stderr, "dsize = %d (doit être > 0)\n", dsize);
+        fprintf(stderr, "dec = %d (doit être >= 0)\n", dec);
+        fprintf(stderr, "number_of_files = %d (doit être > 0)\n", number_of_files);
+        exit(EXIT_FAILURE);
+    }
 
 
     float *buff1 = (float *)malloc(dsize * sizeof(float));
@@ -102,13 +105,14 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
     bool fillState = false;
     
 
-    if (rp_InitReset(false) != RP_OK) {
+    if (rp_InitReset(true) != RP_OK) {
             fprintf(stderr, "Rp api init failed!\n");
             return -1;
     }
 
+    
     ///////// INITIALISATION AQUISITION ///////
-    if(rp_AcqReset()!=RP_OK){
+    if (rp_AcqReset()!=RP_OK){
         fprintf(stderr, "rp_AcqReset failed!\n");
         return -1;
     }
@@ -120,13 +124,13 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
         fprintf(stderr, "rp_AcqAxiSetTriggerDelay RP_CH_2 failed!\n");
         return -1;
     }
-
     if (rp_AcqSetGain(RP_CH_2, Gain) != RP_OK){
         fprintf(stderr, "rp_AcqSetGain CH1 Failed\n");
         return -1;
     }
 
-    ////// INITIALISATION GENERATION BURST ///////
+
+    ////// INITIALISATION BURST GENERATION///////
     if(rp_GenReset() != RP_OK){
             fprintf(stderr, "rp_GenReset failed!\n");
             return -1;
@@ -147,26 +151,23 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
         fprintf(stderr, "rp_GenMode RP_CH_1 BURST failed!\n");
         return -1;
     }
-    
     if(rp_GenBurstCount(RP_CH_1, excitation_burst_cycles_tot) != RP_OK){
         fprintf(stderr, "rp_GenBurstCount RP_CH_1 failed!\n");
         return -1;
-    }
-    //valeur max pour GenBurstCount = 50 000
+    } //valeur max pour GenBurstCount = 50 000
     if(rp_GenBurstRepetitions(RP_CH_1, 1) != RP_OK){
         fprintf(stderr, "rp_GenBurstRepetitions RP_CH_1 failed!\n");
         return -1;
     }//Répété 1 fois pour que le burst dure qq usecondes
-    
     if(rp_GenBurstPeriod(RP_CH_1, 1) != RP_OK){
         fprintf(stderr, "rp_GenBurstPeriod RP_CH_1 failed!\n");
         return -1;
-    }//une micro seconde entre chaque répétition
-    
-    if( rp_GenOutEnable(RP_CH_1) != RP_OK){
+    } //une micro seconde entre chaque répétition    
+    if(rp_GenOutEnable(RP_CH_1) != RP_OK){
         fprintf(stderr, "rp_GenOutEnable RP_CH_1 failed!\n");
         return -1;
     }
+
 
     //INITIALISATION ET LANCEMENT DE L'OSCILLATEUR LOCAL
     if(rp_GenWaveform(RP_CH_2, RP_WAVEFORM_SINE) != RP_OK){
@@ -189,30 +190,32 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
         fprintf(stderr, "rp_GenOutEnable RP_CH_1 failed!\n");
         return -1;
     }
-  
+
+    //// Création du fichier
     FILE *fichier = fopen(nomFichier, "w");
     printf("fichier crée : ");
     puts(nomFichier);
-
     if (fichier == NULL) {
         perror("Erreur lors de l'ouverture du fichier\n");
         return -1; // Quitte le programme avec erreur
     }
-
     if (create_file(fichier, dsize, dec, number_of_files)){
         perror("Erreur de creation fichier");
         return -1;
     }
 
+
     //////////////////////////////////////
-    //////////BOUCLE DE FICHIERS//////////
+    //////////ACQ   LOOP     ////////////////
     clock_t begin = clock();
+    clock_t mid_b;
+    clock_t mid_e;
     int i=0;
+
     for (i=0;i<number_of_files;i++){
-
+        
         rp_AcqAxiGetMemoryRegion(&g_adc_axi_start,&g_adc_axi_size);
-        //printf("Reserved memory start 0x%X size 0x%X bytes\n",g_adc_axi_start,g_adc_axi_size);
-
+        printf("Reserved memory start 0x%X size 0x%X bytes\n",g_adc_axi_start,g_adc_axi_size);
         if (rp_AcqAxiSetBufferSamples(RP_CH_2,g_adc_axi_start, dsize) != RP_OK) {
         fprintf(stderr, "rp_AcqAxiSetBuffer RP_CH_2 failed!\n");
         return -1;
@@ -221,8 +224,8 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
             fprintf(stderr, "rp_AcqAxiEnable RP_CH_2 failed!\n");
             return -1;
         }
+        
 
-    
         //LANCEMENT DE L'AQUISITION
         if (rp_AcqStart() != RP_OK) {
         fprintf(stderr, "rp_AcqStart failed!\n");
@@ -254,6 +257,7 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
             fprintf(stderr, "rp_GenSynchronise failed!\n");
             return -1;
         }
+
         while(1){
             rp_AcqGetTriggerState(&state);
             if(state == RP_TRIG_STATE_TRIGGERED){
@@ -269,20 +273,21 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
                 return -1;
             }
         }
-        
+      
         if(  rp_AcqStop() != RP_OK){
                 fprintf(stderr, "rp_AcqStop failed!\n");
                 return -1;
         }
 
-        rp_AcqAxiGetWritePointerAtTrig(RP_CH_2,&posChA);
-        fprintf(stderr,"Tr pos1: 0x%X\n",posChA);
 
-        
+        rp_AcqAxiGetWritePointerAtTrig(RP_CH_2, &posChA);
+        printf("Tr pos1: 0x%X\n",posChA);
+
+
         if(rp_AcqAxiGetDataV(RP_CH_2, posChA, &dsize, buff1)!=RP_OK){
             fprintf(stderr, "rp_AcqAxiGetDataV failed\n");
         }
-        
+  
 
         //////  Ecriture des données dans le fichier    //////
         printf("ecriture FID %d\n",i);
@@ -292,19 +297,21 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
             if (i!= dsize -1) fprintf(fichier, ",");
         }
         fprintf(fichier, "\n");
-
-        //sleep(delayRepeat);
+ 
+    
 
     }
     clock_t end = clock();
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    //double time_func = (double)(mid_e - mid_b) / CLOCKS_PER_SEC;
 
     printf("Temps d'execution : %lf\n",time_spent);
-
+    //printf("Temps function : %lf\n",time_func);
     fclose(fichier);
-
+    
     /* Releasing resources */
     rp_AcqAxiEnable(RP_CH_2, false);
+    rp_GenOutDisable(RP_CH_2);
     rp_Release();
     free(buff1);
     return 0;
