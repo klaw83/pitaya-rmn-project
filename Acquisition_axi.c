@@ -1,5 +1,4 @@
-/* Red Pitaya C API example Acquiring a signal from a buffer
- * This application acquires a signal on a specific channel */
+/////// VERSION 2 - rapide dans un seul fichier //////  
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -76,25 +75,29 @@ int main(int argc, char **argv)
     rp_acq_trig_state_t state;
     uint32_t g_adc_axi_start,g_adc_axi_size;
 
-    if (argc < 5) {
+    if (argc < 7) {
     fprintf(stderr, "Erreur : nombre d'arguments insuffisant.\n");
-    fprintf(stderr, "Usage : %s <dsize> <dec> <number_of_files> <nomFichier>\n", argv[0]);
+    fprintf(stderr, "Usage : %s <dsize> <dec> <number_of_files> <nomFichier> <Frequency> <exitation duration>\n", argv[0]);
     exit(EXIT_FAILURE);
-}
+    }
 
-dsize = atoi(argv[1]);
-dec = atoi(argv[2]);
-number_of_files = atoi(argv[3]);
-strcpy(nomFichier, argv[4]);
+    dsize = atoi(argv[1]);
+    dec = atoi(argv[2]);
+    number_of_files = atoi(argv[3]);
+    strcpy(nomFichier, argv[4]);
+    Larmor_frequency_Hertz = atof(argv[5]);
+    excitation_duration_seconds = atof(argv[6]);
+    printf("larmor %f, duration excitation %f\n",Larmor_frequency_Hertz, excitation_duration_seconds);
 
-// Vérification des valeurs numériques
-if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
-    fprintf(stderr, "Erreur : paramètres invalides.\n");
-    fprintf(stderr, "dsize = %d (doit être > 0)\n", dsize);
-    fprintf(stderr, "dec = %d (doit être >= 0)\n", dec);
-    fprintf(stderr, "number_of_files = %d (doit être > 0)\n", number_of_files);
-    exit(EXIT_FAILURE);
-}
+    // Vérification des valeurs numériques
+    if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
+        fprintf(stderr, "Erreur : paramètres invalides.\n");
+        fprintf(stderr, "dsize = %d (doit être > 0)\n", dsize);
+        fprintf(stderr, "dec = %d (doit être >= 0)\n", dec);
+        fprintf(stderr, "number_of_files = %d (doit être > 0)\n", number_of_files);
+        exit(EXIT_FAILURE);
+    }
+
 
 
     float *buff1 = (float *)malloc(dsize * sizeof(float));
@@ -107,7 +110,8 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
             return -1;
     }
 
-    ///////// INITIALISATION AQUISITION ///////
+
+    //// INITIALISATION AQUISITION ///////
     if(rp_AcqReset()!=RP_OK){
         fprintf(stderr, "rp_AcqReset failed!\n");
         return -1;
@@ -116,17 +120,17 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
         fprintf(stderr, "rp_AcqAxiSetDecimationFactor failed!\n");
         return -1;
     }
-    if (rp_AcqAxiSetTriggerDelay(RP_CH_2, 0)  != RP_OK) { 
+    if (rp_AcqAxiSetTriggerDelay(RP_CH_2, dsize)  != RP_OK) { 
         fprintf(stderr, "rp_AcqAxiSetTriggerDelay RP_CH_2 failed!\n");
         return -1;
     }
-
     if (rp_AcqSetGain(RP_CH_2, Gain) != RP_OK){
         fprintf(stderr, "rp_AcqSetGain CH1 Failed\n");
         return -1;
     }
 
-    ////// INITIALISATION GENERATION BURST ///////
+
+    //// INITIALISATION GENERATION BURST ///////
     if(rp_GenReset() != RP_OK){
             fprintf(stderr, "rp_GenReset failed!\n");
             return -1;
@@ -167,7 +171,8 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
         return -1;
     }
 
-    //INITIALISATION ET LANCEMENT DE L'OSCILLATEUR LOCAL
+
+    //// INITIALISATION ET LANCEMENT DE L'OSCILLATEUR LOCAL
     if(rp_GenWaveform(RP_CH_2, RP_WAVEFORM_SINE) != RP_OK){
         fprintf(stderr, "rp_GenWaveform RP_CH_1 SINE failed!\n");
         return -1;
@@ -189,7 +194,8 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
         return -1;
     }
   
-    ///Création du fichier
+
+    //// CREATION DU FICHIER
     FILE *fichier = fopen(nomFichier, "w");
     printf("fichier crée : ");
     puts(nomFichier);
@@ -202,12 +208,12 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
         return -1;
     }
 
-    //////////////////////////////////////
+
     //////////BOUCLE DE FICHIERS//////////
     clock_t begin = clock();
     int i=0;
     for (i=0;i<number_of_files;i++){
-
+        rp_AcqResetFpga();
         rp_AcqAxiGetMemoryRegion(&g_adc_axi_start,&g_adc_axi_size);
         //printf("Reserved memory start 0x%X size 0x%X bytes\n",g_adc_axi_start,g_adc_axi_size);
 
@@ -229,8 +235,15 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
             fprintf(stderr, "rp_AcqSetTriggerSrc RP_TRIG_SRC_NOW failed!\n");
             return -1;
         }
-        usleep(40); //prec value excitation_duration_microseconds
 
+        rp_acq_trig_state_t state;
+        while(1){
+            rp_AcqGetTriggerState(&state);
+            if(state == RP_TRIG_STATE_TRIGGERED){
+                sleep(1);
+                break;
+            }
+        }
 
         ////////////Declenchement non syncronisé : ///////////////
         /*if( rp_GenTriggerOnly() != RP_OK){ //Déclencgement de l'oscilateur local
@@ -264,13 +277,13 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
                 return -1;
             }
         }
-        
-        if(  rp_AcqStop() != RP_OK){
+
+        if(rp_AcqStop() != RP_OK){
                 fprintf(stderr, "rp_AcqStop failed!\n");
                 return -1;
         }
 
-        if(rp_AcqAxiGetWritePointerAtTrig(RP_CH_2,&posChA)!=RP_OK){
+        if(rp_AcqAxiGetWritePointerAtTrig(RP_CH_2, &posChA)!=RP_OK){
             fprintf(stderr,"rp_AcqAxiGetWritePointerAtTrig Error");
         }
         printf("Tr pos1: 0x%x\n",posChA);
@@ -279,6 +292,7 @@ if (dsize <= 0 || dec < 0 || number_of_files <= 0) {
             fprintf(stderr, "rp_AcqAxiGetDataV failed\n");
         }
         
+
         //////  Ecriture des données dans le fichier    //////
         printf("ecriture FID %d\n",i);
         for (int i = 0; i < dsize; i++) {
