@@ -1,4 +1,5 @@
-/////// VERSION 2 - rapide dans un seul fichier //////  
+/////// VERSION 2 - rapide dans un seul fichier ////// 
+////// 10 en 60ms  
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -63,8 +64,6 @@ int main(int argc, char **argv)
     float excitation_duration_microseconds = excitation_duration_seconds*1000000;
     float excitation_amplitude_Volts = 0.19;
     float Larmor_frequency_Hertz = 24351392.574;
-    int excitation_burst_cycles_tot = Larmor_frequency_Hertz *excitation_duration_seconds;
-    float oscillator_frequency = Larmor_frequency_Hertz + 1000;
     float oscillator_amplitude_Volts = 0.8;
 
     int delayRepeat = 5; //en secondes
@@ -99,6 +98,9 @@ int main(int argc, char **argv)
     }
 
 
+    int excitation_burst_cycles_tot = Larmor_frequency_Hertz *excitation_duration_seconds;
+    float oscillator_frequency = Larmor_frequency_Hertz + 1000;
+    
 
     float *buff1 = (float *)malloc(dsize * sizeof(float));
     uint32_t posChA;
@@ -236,15 +238,13 @@ int main(int argc, char **argv)
             return -1;
         }
 
-        rp_acq_trig_state_t state;
         while(1){
             rp_AcqGetTriggerState(&state);
             if(state == RP_TRIG_STATE_TRIGGERED){
-                sleep(1);
+                usleep(1);
                 break;
             }
         }
-
         ////////////Declenchement non syncronisé : ///////////////
         /*if( rp_GenTriggerOnly() != RP_OK){ //Déclencgement de l'oscilateur local
             fprintf(stderr, "rp_GenTriggerOnlyBoth failed!\n");
@@ -256,20 +256,14 @@ int main(int argc, char **argv)
         }
         */
 
-
        ////////////Declenchement syncronisé:///////////////
-        if(rp_GenSynchronise() != RP_OK){
+ 
+
+      if(rp_GenSynchronise() != RP_OK){
             fprintf(stderr, "rp_GenSynchronise failed!\n");
             return -1;
         }
-        while(1){
-            rp_AcqGetTriggerState(&state);
-            if(state == RP_TRIG_STATE_TRIGGERED){
-                //usleep(5);
-                break;
-            }
-        }
-
+        
         printf ("wait to be filled\n");
         while (!fillState) {
             if (rp_AcqAxiGetBufferFillState(RP_CH_2, &fillState) != RP_OK) {
