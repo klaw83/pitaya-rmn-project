@@ -210,9 +210,11 @@ int main(int argc, char **argv)
 
 
     //////////BOUCLE DE FICHIERS//////////
+    rp_DpinSetState(RP_LED0+1, RP_HIGH);
     clock_t begin = clock();
     int i=0;
     for (i=0;i<number_of_files;i++){
+        fillState = false;
         rp_AcqResetFpga();
         rp_AcqAxiGetMemoryRegion(&g_adc_axi_start,&g_adc_axi_size);
         //printf("Reserved memory start 0x%X size 0x%X bytes\n",g_adc_axi_start,g_adc_axi_size);
@@ -258,7 +260,7 @@ int main(int argc, char **argv)
                 return -1;
             }
         }
-
+        
         if(rp_AcqStop() != RP_OK){
                 fprintf(stderr, "rp_AcqStop failed!\n");
                 return -1;
@@ -288,6 +290,7 @@ int main(int argc, char **argv)
     }
     clock_t end = clock();
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    rp_DpinSetState(RP_LED0+1, RP_LOW);
 
     printf("Temps d'execution : %lf\n",time_spent);
 
