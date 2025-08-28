@@ -6,6 +6,6 @@
    venv\Scripts\activate or launch the kernel detected in VSCode
 
 2. Install dependencies
-   pip install -r requirements.txt
+   pip install -r python/requirements.txt
 
 3. Open Acquisition_RMN - FULL.ipynb
