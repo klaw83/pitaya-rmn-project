@@ -20,9 +20,12 @@ PRGS =  sin\
 	digital_led_blink\
 	Simulation\
 	SimulationV1\
+	Find_excitation_time\
+	Find_Frequency\
 
 OBJS := $(patsubst %,%.o,$(PRGS))
 SRC := $(patsubst %,%.c,$(PRGS))
+
 
 all: $(PRGS)
 
