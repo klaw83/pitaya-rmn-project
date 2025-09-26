@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
+#include <math.h>
 #include "rp.h"
 
 #define DATA_SIZE_MAX 524288
@@ -61,11 +62,11 @@ float find_max(float buff[], int size) {
         return -1; // or handle error appropriately
     }
     
-    float max = abs(buff[0]); // Initialize max with first element
+    float max = fabs(buff[0]); // Initialize max with first element
     
     for (int i = 1; i < size; i++) {
-        if (abs(buff[i]) > max) {
-            max = abs(buff[i]);
+        if (fabs(buff[i]) > max) {
+            max = fabs(buff[i]);
         }
     }
     
@@ -214,7 +215,7 @@ int main(int argc, char **argv)
     }
   
 
-    //// CREATION DU FICHIER    
+/*     //// CREATION DU FICHIER    
     FILE *fichier = fopen(nomFichier, "w");
     printf("fichier crée : ");
     puts(nomFichier);
@@ -226,7 +227,7 @@ int main(int argc, char **argv)
         perror("Erreur de creation fichier");
         return -1;
     }
-
+ */
 
     
     //////////BOUCLE DE FICHIERS//////////
@@ -246,7 +247,7 @@ int main(int argc, char **argv)
         return -1;
         }
 
-        oscillator_frequency = *Larmor_frequency_Hertz_t + 1000;
+        oscillator_frequency = *Larmor_frequency_Hertz_t - 1000;
         if(rp_GenFreq(RP_CH_2, oscillator_frequency) != RP_OK){
             fprintf(stderr, "rp_GenFreq RP_CH_2 failed!\n");
         return -1;
@@ -317,14 +318,14 @@ int main(int argc, char **argv)
             fprintf(stderr, "rp_AcqAxiGetDataV failed\n");
         }
         
-        //////  Ecriture des données dans le fichier    //////
+/*         //////  Ecriture des données dans le fichier    //////
         printf("ecriture FID %d\n",i);
         for (int j = 0; j < dsize; j++) {
             //printf("[%d]\t%f\n",i,buff1[i]);
             fprintf(fichier, "%f", buff1[j]);
             if (j!= dsize -1) fprintf(fichier, ",");
         }
-        fprintf(fichier, "\n");
+        fprintf(fichier, "\n"); */
     
         /////////////////////////////////////////
         ////// ----- Find max of Buff - ////////
@@ -335,7 +336,7 @@ int main(int argc, char **argv)
         }
 
         //////////////////////////////////////
-        ///// ---- MMPT ALGO ------ /////////
+        ///// ---- MPPT ALGO ------ /////////
         
         if(maximum_amplitude_t[i+1]-maximum_amplitude_t[i]>0){
             if(Larmor_frequency_Hertz_t[i+1] - Larmor_frequency_Hertz_t[i]>0){
@@ -343,13 +344,13 @@ int main(int argc, char **argv)
                 printf("Augmentation de la fréquence\t");
             }
             else{
-                *(Larmor_frequency_Hertz_t+2) = *Larmor_frequency_Hertz_t - step_frequency_Hertz;
+                Larmor_frequency_Hertz_t[i+2] = Larmor_frequency_Hertz_t[i+1] - step_frequency_Hertz;
                 printf("Diminution de la fréquence\t");
             }
         }
         
         else{
-            if(Larmor_frequency_Hertz_t[i+1] - Larmor_frequency_Hertz_t[i]<0){
+            if(Larmor_frequency_Hertz_t[i+1] - Larmor_frequency_Hertz_t[i]>0){
                 Larmor_frequency_Hertz_t[i+2] = Larmor_frequency_Hertz_t[i+1] - step_frequency_Hertz;
                 printf("Diminution de la fréquence\t");
             }
@@ -376,7 +377,7 @@ int main(int argc, char **argv)
 
     printf("Temps d'execution : %lf\n",time_spent);
 
-    fclose(fichier);
+    //fclose(fichier);
     /* Releasing resources */
     rp_AcqAxiEnable(CH_ACQ, false);
     rp_Release();
